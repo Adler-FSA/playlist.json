@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "updated": "2025-09-30T12:00:00Z",
+  "rotation": "weekly",
+  "videos": [
+    { "title": "Adlerflug 1", "url": "https://www.youtube.com/embed/CqesPVWSzao" },
+    { "title": "Adlerflug 2", "url": "https://www.youtube.com/embed/qPlWNJ__Z1Q" },
+    { "title": "Adlerflug 3", "url": "https://www.youtube.com/embed/WcuSPqefQBY" },
+    { "title": "Adler (General)", "url": "https://www.youtube.com/embed/miWBKSszEIw" }
+  ],
+  "music": [
+    { "title": "Moonlight Sonata – Beethoven", "url": "https://archive.org/download/MoonlightSonata_Beethoven/Bethoven-Moonlight-Sonata.mp3" },
+    { "title": "Soaring – Kevin MacLeod", "url": "https://archive.org/download/KevinMacLeod_Ambient/Soaring.mp3" },
+    { "title": "The Temperature of the Air – Chris Zabriskie", "url": "https://archive.org/download/ChrisZabriskieAmbient/TemperatureOfAir.mp3" },
+    { "title": "At Rest – Kevin MacLeod", "url": "https://archive.org/download/AtRest_48/AtRest.mp3" }
+  ]
+}
