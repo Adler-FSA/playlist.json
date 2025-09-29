@@ -1,0 +1,36 @@
+<!-- ⚙️ Admin Panel: FSA Einstellungen -->
+<div id="fsa-admin" style="font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif; max-width:600px; margin:20px auto; padding:20px; background:#fff; border:1px solid #ddd; border-radius:10px; box-shadow:0 4px 12px rgba(0,0,0,.1);">
+  <h2 style="margin:0 0 12px; font-size:1.4rem; color:#111827;">⚙️ FSA Admin – Einstellungen</h2>
+
+  <!-- 📧 E-Mail Feld -->
+  <label for="admin-email">📧 Kontakt-E-Mail</label><br>
+  <input id="admin-email" type="email" style="width:100%; padding:6px; margin-top:6px;" placeholder="deine@email.de">
+  
+  <button onclick="saveEmail()" style="margin-top:10px; padding:8px 14px; background:#2563eb; color:#fff; border:none; border-radius:6px; cursor:pointer;">
+    Speichern
+  </button>
+</div>
+
+<script>
+async function loadConfig(){
+  try {
+    const res = await fetch("config.json");
+    const config = await res.json();
+    document.getElementById("admin-email").value = config.email || "";
+  } catch(e){
+    console.warn("Config konnte nicht geladen werden:", e);
+  }
+}
+
+async function saveEmail(){
+  const email = document.getElementById("admin-email").value;
+  if(email && email.includes("@")){
+    alert("✅ E-Mail gespeichert: " + email + "\n\nFalls du einen Fehler gemacht hast, melde dich – wir können deine Seite auf Werkseinstellung zurücksetzen.");
+    // hier könnte die E-Mail auch in ein JSON oder localStorage geschrieben werden
+  } else {
+    alert("⚠️ Bitte eine gültige E-Mail eingeben!");
+  }
+}
+
+loadConfig();
+</script>
