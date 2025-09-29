@@ -35,12 +35,8 @@
 
   "music": [
     {
-      "title": "Greensleeves (Instrumental, Wikimedia)",
-      "url": "https://upload.wikimedia.org/wikipedia/commons/4/45/Greensleeves.ogg"
-    },
-    {
-      "title": "Moonlight Sonata – Beethoven (Piano)",
-      "url": "https://archive.org/download/MoonlightSonata_Beethoven/Bethoven-Moonlight-Sonata.mp3"
+      "title": "Greensleeves (Wikimedia, Testmusik)",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/4/45/Greensleeves.ogg/Greensleeves.ogg.mp3"
     }
   ]
 }
