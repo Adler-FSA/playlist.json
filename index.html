@@ -1,190 +1,130 @@
 <!doctype html>
 <html lang="de">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>FSA Global Playlist Dashboard</title>
-  <style>
-    body{font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;margin:0;padding:20px;background:#f9fafb;color:#111}
-    h1{margin-top:0;color:#1f2937}
-    h2{margin:22px 0 10px;color:#111827}
-    .wrap{max-width:1024px;margin:0 auto}
-    .grid{display:grid;grid-template-columns:1fr;gap:14px}
-    .card{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:14px}
-    .item{margin:10px 0;padding:10px;border:1px solid #eee;border-radius:8px;background:#fff}
-    iframe{width:100%;height:300px;border:none;border-radius:6px}
-    audio{width:100%;margin-top:8px}
-    .row{display:flex;gap:8px;flex-wrap:wrap}
-    input,select{padding:10px;border:1px solid #cbd5e1;border-radius:8px;flex:1;min-width:240px}
-    button{padding:10px 14px;border:none;border-radius:8px;font-weight:600;cursor:pointer}
-    .btn{background:#2563eb;color:#fff}
-    .btn-green{background:#16a34a;color:#fff}
-    .btn-red{background:#dc2626;color:#fff}
-    .note{font-size:.9rem;color:#475569}
-    .badge{display:inline-block;padding:2px 8px;border-radius:999px;background:#eef2ff;color:#3730a3;font-size:.8rem;margin-left:6px}
-    .ok{color:#15803d;font-weight:700}
-    .err{color:#b91c1c;font-weight:700}
-    .muted{color:#64748b}
-    @media(min-width:900px){ .grid{grid-template-columns:1fr 1fr} }
-    /* Kino */
-    #kinoFrame{width:100%;height:450px;margin:20px 0;border:4px solid #2563eb;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.15);overflow:hidden}
-    #kinoFrame iframe{width:100%;height:100%;border:none}
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Finanzielle Souveränitäts Akademie</title>
+<style>
+  :root{
+    --bg-card: rgba(15,15,25,0.85);
+    --text: #f2f2f2;
+    --muted: #aab;
+    --accent: #d4af37;
+    --accent-2:#1cc2a0;
+    --shadow: 0 25px 50px rgba(0,0,0,.65);
+    --radius: 14px;
+    --maxw: 1200px;
+  }
+  body{font-family:Inter,system-ui,sans-serif;color:var(--text);background:#000;margin:0}
+  h1,h2,h3{font-family:Montserrat,sans-serif;font-weight:700;line-height:1.2}
+
+  /* Hintergrundvideo */
+  .bg-video{position:fixed;inset:0;z-index:-2;overflow:hidden;background:#000}
+  .bg-video iframe{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:120vw;height:120vh;border:0}
+
+  main{position:relative;z-index:2}
+  section{padding:90px 0}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+
+  /* Karten */
+  @keyframes float {0%{transform:translateY(0)}50%{transform:translateY(-6px)}100%{transform:translateY(0)}}
+  .card{background:var(--bg-card);border-radius:var(--radius);padding:32px;backdrop-filter:blur(10px);color:var(--text);animation:float 9s ease-in-out infinite}
+
+  /* Laufband */
+  .ticker{position:fixed;bottom:0;width:100%;background:rgba(0,0,0,.75);color:#fff;overflow:hidden;white-space:nowrap;z-index:50}
+  .ticker div{display:inline-block;padding-left:100%;animation:scroll 60s linear infinite}
+  @keyframes scroll{0%{transform:translateX(0)}100%{transform:translateX(-100%)}}
+
+  /* Kino-Fenster */
+  #kinoBox{margin:40px auto;padding:20px;border:3px solid var(--accent);border-radius:14px;max-width:860px;min-height:480px;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.3)}
+  #kinoBox iframe{width:100%;height:480px;border:0;border-radius:12px;display:none}
+  #kinoAnnounce{position:absolute;top:-40px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.65);padding:10px 20px;border-radius:999px;color:var(--accent);font-weight:700;font-size:1.1rem;box-shadow:0 0 15px rgba(212,175,55,.5)}
+  #kinoActivate{padding:12px 18px;background:var(--accent-2);color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer}
+
+  /* Footer */
+  .footer{padding:60px 0;color:#ccd;font-size:1rem;border-top:1px solid rgba(255,255,255,.2)}
+</style>
 </head>
 <body>
-<div class="wrap">
-  <h1>🎬 FSA Global Playlist Dashboard <span id="langBadge" class="badge"></span></h1>
 
-  <div id="msg" class="muted">…</div>
+<!-- Hintergrundvideo -->
+<div class="bg-video"><iframe id="bgVideo" src="" allow="autoplay; fullscreen"></iframe></div>
 
-  <!-- 🎬 KINO-FENSTER -->
-  <div class="card">
-    <h2>🎥 Highlight-Kinofenster</h2>
-    <p class="note">Hier laufen exklusive Highlights, Adlerflüge oder Live-Events.</p>
-    <div id="kinoFrame">
-      <iframe id="kinoIframe" src="" allow="autoplay; fullscreen; encrypted-media; microphone; camera" allowfullscreen></iframe>
+<main>
+  <!-- HERO -->
+  <section id="hero">
+    <div class="wrap card">
+      <h1>Dein Geld.<br><span style="color:var(--accent-2)">Deine Freiheit.</span></h1>
+      <p>Die Welt verändert sich: Inflation, KI, Blockchain. Hier lernst du, wie du souverän wirst.</p>
     </div>
-  </div>
+  </section>
 
-  <div class="grid">
-    <!-- LIVE + VIDEOS -->
-    <div class="card">
-      <h2>🔴 <span data-i18n="live_title">Live-Event</span></h2>
-      <div id="liveBox" class="item">—</div>
+  <!-- Reise -->
+  <section id="reise">
+    <div class="wrap card">
+      <h2>Deine Reise zur finanziellen Souveränität</h2>
+      <p>Hier entdeckst du Schritt für Schritt deine neue Freiheit.</p>
+    </div>
+  </section>
 
-      <div class="row" style="align-items:center;margin:10px 0 6px">
-        <strong data-i18n="video_section">Videos</strong>
-        <span class="badge" id="vidCount">0</span>
-        <div style="margin-left:auto">
-          <label class="muted" for="sortMode" data-i18n="sorting">Sortierung</label>
-          <select id="sortMode" onchange="render(true)">
-            <option value="default" data-i18n="sort_default">Standard</option>
-            <option value="shuffle" data-i18n="sort_shuffle">Zufällig</option>
-            <option value="single" data-i18n="sort_single">Nur 1</option>
-          </select>
-          <button class="btn" onclick="startRotation()">▶️ <span data-i18n="start_rot">Rotation starten</span></button>
-          <button class="btn-red" onclick="stopRotation()">⏹ <span data-i18n="stop_rot">Stop</span></button>
-        </div>
+  <!-- Kino-Fenster -->
+  <section id="kino">
+    <div class="wrap" style="position:relative;text-align:center">
+      <div id="kinoAnnounce">⏳ Lade Ankündigung…</div>
+      <div id="kinoBox">
+        <iframe id="kinoFrame" allowfullscreen></iframe>
+        <button id="kinoActivate">▶️ Kino aktivieren</button>
       </div>
-
-      <div id="videoBox"></div>
     </div>
+  </section>
 
-    <!-- MUSIK -->
-    <div class="card">
-      <h2>🎵 <span data-i18n="music_section">Musik</span></h2>
-      <div id="musicBox"></div>
-      <audio id="aud" controls></audio>
-      <p class="note" style="margin-top:8px" data-i18n="music_note">
-        Hinweis: MP3 werden im eingebauten Player abgespielt.
-      </p>
-    </div>
-  </div>
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="wrap" style="text-align:center">© <span id="year"></span> Finanzielle Souveränitäts Akademie</div>
+  </footer>
+</main>
 
-  <!-- ADMIN PANEL -->
-  <div class="card" style="margin-top:16px">
-    <h2>🛠️ <span data-i18n="admin_title">Admin-Panel (lokale Bearbeitung + Export)</span></h2>
-    <p class="note" data-i18n="admin_info">
-      Änderungen werden lokal im Browser gehalten. Mit „Export JSON“ erzeugst du eine neue <code>playlist.json</code>, die du im Repo hochlädst, damit alle Seiten sie sehen.
-    </p>
-
-    <!-- Live -->
-    <h3 style="margin-top:0">🌍 <span data-i18n="live_manage">Live-Event verwalten</span></h3>
-    <div class="row">
-      <input id="liveTitle" type="text" placeholder="Live-Titel">
-      <input id="liveUrl" type="url" placeholder="https://zoom.us/j/... oder https://youtube.com/embed/...">
-      <button class="btn" onclick="setLiveLocal()">💡 <span data-i18n="apply_live_local">Live lokal setzen</span></button>
-    </div>
-
-    <!-- Videos -->
-    <h3>📺 <span data-i18n="add_video">Video hinzufügen</span></h3>
-    <div class="row">
-      <input id="vurl" type="url" placeholder="YouTube URL">
-      <button class="btn-green" onclick="addVideo()">➕ <span data-i18n="add">Hinzufügen</span></button>
-    </div>
-    <div id="vLocal" class="note muted"></div>
-
-    <!-- Musik -->
-    <h3>🎵 <span data-i18n="add_music">Musik hinzufügen</span></h3>
-    <div class="row">
-      <input id="murl" type="url" placeholder="MP3 URL">
-      <button class="btn-green" onclick="addMusic()">➕ <span data-i18n="add">Hinzufügen</span></button>
-    </div>
-    <div id="mLocal" class="note muted"></div>
-
-    <!-- Export -->
-    <h3>💾 <span data-i18n="export_title">Export</span></h3>
-    <div class="row">
-      <select id="rotationSel">
-        <option value="none">none</option>
-        <option value="weekly" selected>weekly</option>
-        <option value="monthly">monthly</option>
-      </select>
-      <button class="btn" onclick="exportJSON()">💾 <span data-i18n="export_btn">Export JSON</span></button>
-      <span class="note" data-i18n="export_note">Lade die Datei im Repo hoch, um sie global zu machen.</span>
-    </div>
-  </div>
-</div>
+<!-- Laufband -->
+<div class="ticker"><div id="tickerContent">🚀 Lade News…</div></div>
 
 <script>
-/* ==== Sprache ==== */
-const dict={de:{live_title:"Live-Event",video_section:"Videos",sorting:"Sortierung",sort_default:"Standard",sort_shuffle:"Zufällig",sort_single:"Nur 1",start_rot:"Rotation starten",stop_rot:"Stop",music_section:"Musik",music_note:"Hinweis: MP3 werden im eingebauten Player abgespielt.",admin_title:"Admin-Panel (lokale Bearbeitung + Export)",admin_info:"Änderungen werden lokal im Browser gehalten. Mit „Export JSON“ erzeugst du eine neue playlist.json, die du im Repo hochlädst, damit alle Seiten sie sehen.",live_manage:"Live-Event verwalten",apply_live_local:"Live lokal setzen",add_video:"Video hinzufügen",add:"Hinzufügen",add_music:"Musik hinzufügen",export_title:"Export",export_btn:"Export JSON",export_note:"Lade die Datei im Repo hoch, um sie global zu machen.",msg_loaded:"✅ Playlist geladen",msg_added:"✅ Hinzugefügt",msg_dup:"⚠️ Bereits vorhanden",msg_badurl:"⚠️ Ungültige URL",msg_only_mp3:"⚠️ Nur MP3 erlaubt",msg_deleted:"🗑️ Gelöscht",msg_error:"❌ Fehler beim Laden"},
-en:{live_title:"Live event",video_section:"Videos",sorting:"Sorting",sort_default:"Default",sort_shuffle:"Shuffle",sort_single:"Single",start_rot:"Start rotation",stop_rot:"Stop",music_section:"Music",music_note:"Note: MP3 play in the built-in player.",admin_title:"Admin panel (local edit + export)",admin_info:"Changes are kept locally in your browser. Use “Export JSON” to generate playlist.json and upload it to the repo to go global.",live_manage:"Manage live event",apply_live_local:"Set live (local)",add_video:"Add video",add:"Add",add_music:"Add music",export_title:"Export",export_btn:"Export JSON",export_note:"Upload the file at repo root to make it global.",msg_loaded:"✅ Playlist loaded",msg_added:"✅ Added",msg_dup:"⚠️ Already exists",msg_badurl:"⚠️ Invalid URL",msg_only_mp3:"⚠️ MP3 only",msg_deleted:"🗑️ Deleted",msg_error:"❌ Load error"}};
-let lang=(navigator.language||'de').toLowerCase().startsWith('de')?'de':'en';
-function t(k){return(dict[lang]&&dict[lang][k])||dict.de[k]||k}
-function applyI18n(){document.getElementById('langBadge').textContent=lang.toUpperCase();document.querySelectorAll('[data-i18n]').forEach(el=>{el.textContent=t(el.getAttribute('data-i18n'))})}
+document.getElementById("year").textContent = new Date().getFullYear();
 
-/* ==== State ==== */
-let remote={version:1,updated:"",rotation:"weekly",videos:[],music:[],live:null};
-let localAdd={videos:[],music:[],live:null};let vids=[];let currentIndex=0;let timer=null;
-
-/* ==== Helpers ==== */
-function normYT(u){if(!u)return u;if(u.includes("youtu.be/"))return"https://www.youtube.com/embed/"+u.split("youtu.be/")[1].split(/[?&]/)[0];if(u.includes("watch?v="))return"https://www.youtube.com/embed/"+u.split("watch?v=")[1].split("&")[0];return u}
-function msg(text,ok){const m=document.getElementById('msg');m.textContent=text;m.className=ok?'ok':'err';setTimeout(()=>{m.className='muted'},3000)}
-function dedup(arr,key='url'){const seen=new Set();return arr.filter(it=>{if(seen.has(it[key]))return false;seen.add(it[key]);return true})}
-
-/* ==== Render ==== */
-function buildMerged(){return{version:(remote.version||1),updated:new Date().toISOString(),rotation:document.getElementById('rotationSel').value||(remote.rotation||'weekly'),videos:dedup([...(remote.videos||[]),...(localAdd.videos||[])]),music:dedup([...(remote.music||[]),...(localAdd.music||[])]),live:(localAdd.live||remote.live||null)}}
-function render(resetIndex){applyI18n();const data=buildMerged();
-const liveBox=document.getElementById('liveBox');if(data.live&&data.live.url){liveBox.innerHTML="<p><b>"+(data.live.title||'Live')+"</b></p><iframe src='"+data.live.url+"' allowfullscreen></iframe>"}else{liveBox.innerHTML="<p class='muted'>"+(lang==='de'?"Kein Live-Event eingetragen":"No live event configured")+"</p>"}
-const mode=document.getElementById('sortMode').value;vids=[...data.videos];if(mode==='shuffle')vids=vids.sort(()=>Math.random()-0.5);if(mode==='single'&&vids.length>0)vids=[vids[0]];if(resetIndex)currentIndex=0;showVideo();document.getElementById('vidCount').textContent=vids.length;
-const mBox=document.getElementById('musicBox');mBox.innerHTML=data.music.map((m,i)=>"<div class='item'>"+(m.title||("Track "+(i+1)))+" <button class='btn-green' onclick=\\\"document.getElementById('aud').src='"+m.url+"';document.getElementById('aud').play()\\\">▶️</button></div>").join('')||"<div class='muted'>"+(lang==='de'?"Keine Musik":"No music")+"</div>";
-document.getElementById('vLocal').innerHTML=(localAdd.videos.length?(lang==='de'?"Lokale Videos: ":"Local videos: ")+localAdd.videos.length:(lang==='de'?"Keine lokalen Videos":"No local videos"))+(localAdd.videos.length?" — <button class='btn-red' onclick='clearLocal(\"videos\")'>"+(lang==='de'?"Leeren":"Clear")+"</button>":"");
-document.getElementById('mLocal').innerHTML=(localAdd.music.length?(lang==='de'?"Lokale Musik: ":"Local music: ")+localAdd.music.length:(lang==='de'?"Keine lokale Musik":"No local music"))+(localAdd.music.length?" — <button class='btn-red' onclick='clearLocal(\"music\")'>"+(lang==='de'?"Leeren":"Clear")+"</button>":"");
-msg(t('msg_loaded'),true)}
-function showVideo(){const box=document.getElementById('videoBox');if(vids.length===0){box.innerHTML="<div class='muted'>"+(lang==='de'?"Keine Videos":"No videos")+"</div>";return}const v=vids[currentIndex];box.innerHTML="<div class='item'><p><b>"+(v.title||'Video')+"</b></p><iframe src='"+v.url+"' allowfullscreen></iframe></div>"}
-
-/* ==== Rotation ==== */
-function startRotation(){stopRotation();timer=setInterval(()=>{if(vids.length){currentIndex=(currentIndex+1)%vids.length;showVideo()}},60000)}
-function stopRotation(){if(timer)clearInterval(timer);timer=null}
-
-/* ==== Admin ==== */
-function setLiveLocal(){const title=document.getElementById('liveTitle').value.trim();const url=document.getElementById('liveUrl').value.trim();if(!url){msg(t('msg_badurl'),false);return}localAdd.live={title:title||'Live',url:url};render(false)}
-function addVideo(){let u=document.getElementById('vurl').value.trim();if(!u){msg(t('msg_badurl'),false);return}u=normYT(u);const merged=buildMerged();if(merged.videos.some(v=>v.url===u)){msg(t('msg_dup'),false);return}localAdd.videos.push({title:"Video "+(merged.videos.length+1),url:u});document.getElementById('vurl').value="";msg(t('msg_added'),true);render(false)}
-function addMusic(){let u=document.getElementById('murl').value.trim();if(!u){msg(t('msg_badurl'),false);return}if(!/\.mp3(\?|$)/i.test(u)){msg(t('msg_only_mp3'),false);return}const merged=buildMerged();if(merged.music.some(m=>m.url===u)){msg(t('msg_dup'),false);return}localAdd.music.push({title:"Track "+(merged.music.length+1),url=u});document.getElementById('murl').value="";msg(t('msg_added'),true);render(false)}
-function clearLocal(which){if(which==='videos')localAdd.videos=[];if(which==='music')localAdd.music=[];msg(t('msg_deleted'),true);render(false)}
-function exportJSON(){const out=buildMerged();const blob=new Blob([JSON.stringify(out,null,2)],{type:"application/json"});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='playlist.json';a.click()}
-
-/* ==== Init ==== */
-(async function init(){applyI18n();try{const res=await fetch('playlist.json?nocache='+Date.now(),{cache:'no-store'});if(res.ok){remote=await res.json()}}catch(e){}document.getElementById('rotationSel').value=remote.rotation||'weekly';render(true)})();
-
-/* ==== Kino laden ==== */
+/* ===== kino.json laden ===== */
 (async function(){
-  const iframe=document.getElementById("kinoIframe");
   try{
-    const override=localStorage.getItem("kinoOverride");
-    if(override){
-      const cfg=JSON.parse(override);
-      if(cfg.kino&&cfg.kino.url){iframe.src=cfg.kino.url;return;}
+    const res=await fetch("kino.json?nocache="+Date.now());
+    if(!res.ok) throw 0;
+    const data=await res.json();
+    // Uhr + Text
+    const d=new Date(data.event.date);
+    const opts={weekday:'long',year:'numeric',month:'long',day:'numeric',hour:'2-digit',minute:'2-digit'};
+    document.getElementById("kinoAnnounce").textContent = d.toLocaleString("de-DE",opts)+" – "+data.event.text;
+    // Button → Video laden
+    document.getElementById("kinoActivate").onclick=()=>{
+      document.getElementById("kinoFrame").src=data.event.video;
+      document.getElementById("kinoFrame").style.display="block";
+      document.getElementById("kinoActivate").style.display="none";
     }
-    const res=await fetch("kino.json?nocache="+Date.now(),{cache:"no-store"});
-    if(res.ok){
-      const cfg=await res.json();
-      if(cfg.kino&&cfg.kino.url){iframe.src=cfg.kino.url;return;}
-    }
-  }catch(e){console.warn("⚠️ Kino konnte nicht geladen werden.");}
-  iframe.src="https://www.youtube.com/embed/miWBKSszEIw?autoplay=1&mute=1&loop=1&playlist=miWBKSszEIw&controls=0&modestbranding=1&playsinline=1";
+  }catch(e){
+    document.getElementById("kinoAnnounce").textContent="❌ Keine Ankündigung geladen";
+  }
 })();
+
+/* ===== Laufband laden ===== */
+(async function(){
+  try{
+    const res=await fetch("laufband.json?nocache="+Date.now());
+    if(!res.ok) throw 0;
+    const arr=await res.json();
+    document.getElementById("tickerContent").innerHTML=arr.map(t=>"💡 "+t).join(" ⚡ ");
+  }catch(e){
+    document.getElementById("tickerContent").textContent="📢 Willkommen in der Akademie!";
+  }
+})();
+
+/* ===== Default Video ===== */
+document.getElementById("bgVideo").src="https://www.youtube.com/embed/miWBKSszEIw?autoplay=1&mute=1&loop=1&playlist=miWBKSszEIw&controls=0&modestbranding=1&playsinline=1";
 </script>
 </body>
 </html>
