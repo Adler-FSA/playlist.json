@@ -1,49 +1,25 @@
 [
-  // --- Eigene Songs ---
-  {
-    "title": "Black Mage of Asgard",
-    "src": "black-mage-of-asgard-background-orchestral-epic-music-for-video-328712.mp3"
-  },
-  {
-    "title": "Happy Day",
-    "src": "happy-day-148320.mp3"
-  },
-  {
-    "title": "Ice of Sofia",
-    "src": "ice-of-sofia-background-dramatic-orchestral-music-for-video-60-second-331089.mp3"
-  },
-  {
-    "title": "Ruins of Fire (60s)",
-    "src": "ruins-of-fire-background-epic-orchestral-music-for-video-60-second-323960.mp3"
-  },
-  {
-    "title": "Ruins of Fire (Full Version)",
-    "src": "ruins-of-fire-background-epic-orchestral-music-for-video-full-ver-323965.mp3"
-  },
-  {
-    "title": "Spring Energy",
-    "src": "spring-energy-320531.mp3"
-  },
-  {
-    "title": "Terra Mater – Inspiring Epic",
-    "src": "terra-mater-inspiring-cinematic-epic-272565.mp3"
-  },
+  // --- Eigene Musik ---
+  { "title": "black-mage-of-asgard-background-orchestral-epic-music-for-video-328712", "src": "black-mage-of-asgard-background-orchestral-epic-music-for-video-328712.mp3" },
+  { "title": "happy-day-148320", "src": "happy-day-148320.mp3" },
+  { "title": "ice-of-sofia-background-dramatic-orchestral-music-for-video-60-second-331089", "src": "ice-of-sofia-background-dramatic-orchestral-music-for-video-60-second-331089.mp3" },
+  { "title": "ruins-of-fire-background-epic-orchestral-music-for-video-60-second-323960", "src": "ruins-of-fire-background-epic-orchestral-music-for-video-60-second-323960.mp3" },
+  { "title": "ruins-of-fire-background-epic-orchestral-music-for-video-full-ver-323965", "src": "ruins-of-fire-background-epic-orchestral-music-for-video-full-ver-323965.mp3" },
+  { "title": "spring-energy-320531", "src": "spring-energy-320531.mp3" },
+  { "title": "terra-mater-inspiring-cinematic-epic-272565", "src": "terra-mater-inspiring-cinematic-epic-272565.mp3" },
 
-  // --- Musik aus LP General Code 1 ---
-  {
-    "title": "terra-mater-inspiring-cinematic-epic-272565",
-    "src": "terra-mater-inspiring-cinematic-epic-272565.mp3"
-  },
-  {
-    "title": "epic-adventure-trailer-123456",
-    "src": "epic-adventure-trailer-123456.mp3"
-  },
-  {
-    "title": "motivational-cinematic-score-789101",
-    "src": "motivational-cinematic-score-789101.mp3"
-  },
+  // --- Musik aus General Code ---
+  { "title": "terra-mater-inspiring-cinematic-epic-272565", "src": "terra-mater-inspiring-cinematic-epic-272565.mp3" },
+  { "title": "epic-adventure-trailer-123456", "src": "epic-adventure-trailer-123456.mp3" },
+  { "title": "motivational-cinematic-score-789101", "src": "motivational-cinematic-score-789101.mp3" },
 
-  // --- Platzhalter Audio ---
+  // --- Videos (YouTube) ---
+  { "title": "Adler Video (YouTube)", "src": "https://youtu.be/CqesPVWSzao?si=EgXRFNOrheIv_MnP" },
+  { "title": "FSA Trailer (YouTube)", "src": "https://youtu.be/qPlWNJ__Z1Q?si=T2tMaHgkK080tEyY" },
+  { "title": "Motivational Clip (YouTube)", "src": "https://youtu.be/WcuSPqefQBY?si=Fi1nG_mt8sV20tbi" },
+  { "title": "Adler Video (lokal)", "src": "adler-video.mp4" },
+
+  // --- Platzhalter Audio (30) ---
   { "title": "Platzhalter Audio 1", "src": "placeholder-audio-1.mp3" },
   { "title": "Platzhalter Audio 2", "src": "placeholder-audio-2.mp3" },
   { "title": "Platzhalter Audio 3", "src": "placeholder-audio-3.mp3" },
@@ -75,7 +51,7 @@
   { "title": "Platzhalter Audio 29", "src": "placeholder-audio-29.mp3" },
   { "title": "Platzhalter Audio 30", "src": "placeholder-audio-30.mp3" },
 
-  // --- Platzhalter Video ---
+  // --- Platzhalter Video (20) ---
   { "title": "Platzhalter Video 1", "src": "placeholder-video-1.mp4" },
   { "title": "Platzhalter Video 2", "src": "placeholder-video-2.mp4" },
   { "title": "Platzhalter Video 3", "src": "placeholder-video-3.mp4" },
