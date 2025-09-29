@@ -1,249 +1,85 @@
 <!doctype html>
 <html lang="de">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Finanzielle Souveränitäts Akademie</title>
-<style>
-  :root{
-    --bg-card: rgba(15,15,25,0.85);
-    --text: #f2f2f2;
-    --muted: #aab;
-    --accent: #d4af37;   /* Gold */
-    --accent-2:#1cc2a0;  /* Türkis */
-    --shadow: 0 25px 50px rgba(0,0,0,.65);
-    --radius: 14px;
-    --maxw: 1200px;
-  }
-
-  body{font-family:Inter,system-ui,sans-serif;color:var(--text);background:#000;margin:0}
-  h1,h2,h3{font-family:Montserrat,system-ui,sans-serif;font-weight:700;line-height:1.2;margin:0 0 10px}
-
-  /* Hintergrund-Video */
-  .bg-video{position:fixed;inset:0;z-index:-2;pointer-events:none;background:#000;overflow:hidden}
-  .bg-video iframe{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:120vw;height:120vh;border:0}
-
-  main{position:relative;z-index:2}
-  section{padding:90px 0}
-  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
-  .grid{display:grid;gap:32px}
-  .grid.cols-2{grid-template-columns:repeat(2,1fr)}
-  @media(max-width:980px){.grid.cols-2{grid-template-columns:1fr}}
-
-  /* Karten */
-  @keyframes float {0%{transform:translateY(0)}50%{transform:translateY(-6px)}100%{transform:translateY(0)}}
-  @keyframes pulseBorder {
-    0%{box-shadow:var(--shadow);border:1px solid rgba(212,175,55,0)}
-    50%{box-shadow:0 0 20px rgba(212,175,55,0.7),var(--shadow);border:1px solid rgba(212,175,55,0.5)}
-    100%{box-shadow:var(--shadow);border:1px solid rgba(212,175,55,0)}
-  }
-  .card{background:var(--bg-card);border-radius:var(--radius);padding:32px;
-        backdrop-filter:blur(10px);color:var(--text);
-        animation:float 9s ease-in-out infinite,pulseBorder 6s ease-in-out infinite}
-
-  .btn{display:inline-block;background:var(--accent);color:#000;padding:14px 24px;border-radius:999px;
-       font-weight:700;text-decoration:none;font-family:Montserrat,system-ui,sans-serif;font-size:1rem;
-       box-shadow:0 4px 12px rgba(0,0,0,.45)}
-  .btn:hover{background:#e6c962}
-  .btn.full{display:block;width:100%;text-align:center}
-
-  /* Musik-Button */
-  #musikBtn{position:fixed;bottom:24px;right:24px;z-index:5;padding:12px 18px;background:rgba(0,0,0,.7);
-            color:#fff;border:none;border-radius:50px;font-size:1rem;font-weight:700;cursor:pointer;
-            box-shadow:0 8px 20px rgba(0,0,0,.5)}
-
-  /* Laufband */
-  #ticker{position:fixed;bottom:0;left:0;width:100%;background:rgba(0,0,0,.8);color:#fff;
-          font-weight:700;padding:10px 0;white-space:nowrap;overflow:hidden;z-index:6}
-  #ticker span{display:inline-block;padding-left:100%;animation:scroll 30s linear infinite}
-  @keyframes scroll {0%{transform:translateX(0)}100%{transform:translateX(-100%)}}
-
-  /* Accordion */
-  .accordion-btn{width:100%;background:none;border:none;outline:none;text-align:left;
-                 padding:16px;font-size:1.1rem;font-weight:700;color:var(--accent);cursor:pointer;
-                 border-bottom:1px solid rgba(255,255,255,.15);transition:background .25s}
-  .accordion-btn:hover{background:rgba(255,255,255,.05)}
-  .accordion-item .accordion-content{display:none;padding:12px 16px 16px;color:#fff;line-height:1.7}
-  .accordion-item.active .accordion-content{display:block}
-
-  /* Kino-Fenster */
-  #kinoFrame{width:800px;max-width:95%;height:450px;margin:40px auto;border:4px solid var(--accent);
-             border-radius:16px;box-shadow:0 12px 40px rgba(0,0,0,.6);overflow:hidden}
-
-  /* Footer */
-  .footer{padding:60px 0;color:#ccd;font-size:1rem;border-top:1px solid rgba(255,255,255,.2)}
-
-  /* Admin-Box */
-  #adminBox{display:none;max-width:600px;margin:40px auto;padding:20px;border:2px dashed #aaa;background:#fff;color:#000;border-radius:10px}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>FSA Laufband Admin</title>
+  <style>
+    body{font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;margin:0;padding:20px;background:#f9fafb;color:#111}
+    h1{margin-top:0;color:#1f2937}
+    .wrap{max-width:800px;margin:0 auto}
+    .card{background:#fff;border:1px solid #ddd;border-radius:10px;padding:16px;margin-bottom:20px;box-shadow:0 4px 8px rgba(0,0,0,0.05)}
+    .row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+    input{flex:1;padding:10px;border:1px solid #bbb;border-radius:8px}
+    button{padding:10px 14px;border:none;border-radius:8px;font-weight:600;cursor:pointer}
+    .btn{background:#2563eb;color:#fff}
+    .btn-red{background:#dc2626;color:#fff}
+    .item{padding:10px;border:1px solid #ddd;border-radius:6px;margin:6px 0;display:flex;justify-content:space-between;align-items:center}
+    .muted{color:#64748b;font-size:.9rem}
+  </style>
 </head>
 <body>
+<div class="wrap">
+  <h1>🛠️ Laufband Admin</h1>
 
-<!-- Hintergrund-Video -->
-<div class="bg-video"><iframe id="bgVideo" src=""></iframe></div>
-
-<!-- Musik -->
-<audio id="bgMusic" loop><source id="bgMusicSrc" src="" type="audio/mpeg"></audio>
-<button id="musikBtn">🎵 Musik starten</button>
-
-<!-- Laufband -->
-<div id="ticker"><span id="tickerText">Loading…</span></div>
-
-<main>
-
-  <!-- HERO -->
-  <section id="hero">
-    <div class="wrap grid cols-2">
-      <div class="card">
-        <h1 style="font-size:2.4rem">Dein Geld.<br><span style="color:var(--accent-2)">Deine Freiheit.</span></h1>
-        <p>Die Welt verändert sich: Inflation, KI, Blockchain. Hier lernst du, wie du souverän wirst.</p>
-        <a href="#cta" class="btn" style="margin-top:10px">Jetzt starten</a>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:22px">
-        <div class="card" style="font-style:italic;text-align:center">„Eine Investition in Wissen bringt die besten Zinsen.“ – Franklin</div>
-        <div class="card">
-          <h2>Deine Vorteile</h2>
-          <ul style="margin:0;padding-left:18px;line-height:1.9">
-            <li>💰 Vermögen schützen</li>
-            <li>🔑 Zugang zu Krypto</li>
-            <li>🤖 Einkommen mit KI</li>
-            <li>🌐 Klarheit statt Chaos</li>
-          </ul>
-        </div>
-        <div class="card" style="font-style:italic;text-align:center">„Das Wichtigste ist, in dich selbst zu investieren.“ – Buffett</div>
-      </div>
+  <div class="card">
+    <h3>➕ Nachricht hinzufügen</h3>
+    <div class="row">
+      <input id="msgInput" type="text" placeholder="Neue Nachricht eingeben...">
+      <button class="btn" onclick="addMsg()">Hinzufügen</button>
     </div>
-  </section>
+  </div>
 
-  <!-- REISE -->
-  <section id="reise">
-    <div class="wrap">
-      <div class="card">
-        <h2>Deine Reise zur finanziellen Souveränität</h2>
-        <div class="accordion-item"><button class="accordion-btn">🚀 Nie mehr Fremdbestimmung</button><div class="accordion-content"><p>Starte deinen eigenen Weg.</p></div></div>
-        <div class="accordion-item"><button class="accordion-btn">🎆 Wer es wirklich will</button><div class="accordion-content"><p>Du bist nicht allein – die Community wächst täglich.</p></div></div>
-        <div class="accordion-item"><button class="accordion-btn">🧠 Viele entdecken täglich Krypto</button><div class="accordion-content"><p>Blockchain, Krypto und KI eröffnen neue Chancen.</p></div></div>
-        <div class="accordion-item"><button class="accordion-btn">📚 Deshalb gibt es die Akademie</button><div class="accordion-content"><p>Hier bekommst du Klarheit, Praxiswissen und Tools.</p></div></div>
-      </div>
-    </div>
-  </section>
+  <div class="card">
+    <h3>📜 Nachrichten</h3>
+    <div id="msgList" class="muted">Noch keine geladen…</div>
+  </div>
 
-  <!-- KINO -->
-  <section id="kino">
-    <div class="wrap" style="text-align:center">
-      <h2 style="color:var(--accent);margin-bottom:12px;">🎬 Highlight-Kinofenster</h2>
-      <div id="kinoFrame"><iframe id="kinoIframe" src="" allowfullscreen></iframe></div>
-    </div>
-  </section>
-
-  <!-- CTA -->
-  <section id="cta">
-    <div class="wrap">
-      <div class="card" style="text-align:center;padding:50px;max-width:780px;margin:0 auto">
-        <h2 style="font-size:2rem;margin-bottom:8px;color:var(--accent)">Finanzbildung für die neue Welt</h2>
-        <p id="ctaCopyText" style="font-size:1.15rem;font-weight:700;color:var(--accent)">EMAIL_PLACEHOLDER</p>
-        <a id="ctaMailto" href="mailto:EMAIL_PLACEHOLDER" class="btn full">🚀 Jetzt starten</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- FOOTER -->
-  <footer class="footer"><div class="wrap" style="text-align:center">© <span id="year"></span> FSA</div></footer>
-</main>
-
-<!-- Admin-Box (nur sichtbar mit ?admin=1) -->
-<div id="adminBox">
-  <h3>🛠️ Admin Override</h3>
-  <p>Page-ID: <span id="adminPageId"></span></p>
-  <input id="adminMail" type="email" placeholder="Neue Override-Mail" style="width:100%;padding:8px;margin:6px 0">
-  <button onclick="setOverride()" style="padding:8px 14px;background:#1cc2a0;color:#fff;border:none;border-radius:6px;cursor:pointer">✅ Setzen</button>
-  <button onclick="resetOverride()" style="padding:8px 14px;background:#e11d48;color:#fff;border:none;border-radius:6px;cursor:pointer">♻️ Löschen</button>
-  <div id="adminMsg" style="margin-top:8px;font-weight:700"></div>
+  <div class="card">
+    <h3>💾 Export</h3>
+    <button class="btn" onclick="exportJSON()">Export JSON (laufband.json)</button>
+    <p class="muted">👉 Lade die Datei danach ins Repo hoch, damit sie global wirkt.</p>
+  </div>
 </div>
 
 <script>
-document.getElementById('year').textContent=new Date().getFullYear();
+let messages=[];
 
-/* Accordion */
-document.querySelectorAll(".accordion-btn").forEach(btn=>btn.addEventListener("click",()=>btn.parentElement.classList.toggle("active")));
-
-/* Musik */
-const musikBtn=document.getElementById("musikBtn");const bgMusik=document.getElementById("bgMusic");let musicPlaying=false;
-musikBtn.addEventListener("click",()=>{if(!musicPlaying){bgMusik.play();musikBtn.textContent="⏸ Musik stoppen";musicPlaying=true}else{bgMusik.pause();musikBtn.textContent="🎵 Musik starten";musicPlaying=false}});
-
-/* Page-ID aus URL */
-function extractPageIdFromUrl(url){
-  try{
-    const u=new URL(url, window.location.origin);
-    const pid=u.searchParams.get("pid");
-    if(pid) return pid;
-    const hay=u.href;
-    let m=hay.match(/FSA-\d{4}-\d{2}-\d{2}-[A-Z0-9]{4}/i);
-    if(m) return m[0];
-    m=hay.match(/FSA-[A-Z0-9\-]+/i);
-    if(m) return m[0];
-    return "DEFAULT";
-  }catch(e){return "DEFAULT";}
+/* Render */
+function render(){
+  const box=document.getElementById("msgList");
+  if(messages.length===0){ box.innerHTML="<div class='muted'>Keine Nachrichten</div>"; return; }
+  box.innerHTML=messages.map((m,i)=>`
+    <div class="item">
+      <span>${m}</span>
+      <button class="btn-red" onclick="delMsg(${i})">🗑️ Löschen</button>
+    </div>
+  `).join("");
 }
 
-/* Inhalte laden */
-(async function(){
-  const PAGE_ID=extractPageIdFromUrl(location.href);
-  const OVERRIDE_KEY="FSA_EMAIL_OVERRIDE_"+PAGE_ID;
-  let effective="EMAIL_PLACEHOLDER";
-  let defaultEmail="EMAIL_PLACEHOLDER";
-  let pageEmail="";
-
-  // Playlist
-  try{const res=await fetch("playlist.json");const d=await res.json();
-    if(d.videos&&d.videos.length)document.getElementById("bgVideo").src=d.videos[0].url;
-    if(d.music&&d.music.length){document.getElementById("bgMusicSrc").src=d.music[0].url;bgMusik.load();}
-  }catch(e){}
-
-  // Laufband
-  try{const res=await fetch("laufband.json");const d=await res.json();
-    if(d.texts&&d.texts.length)document.getElementById("tickerText").textContent=d.texts.join(" • ");
-  }catch(e){}
-
-  // Kino
-  try{const res=await fetch("kino.json");const d=await res.json();
-    if(d.kino&&d.kino.url)document.getElementById("kinoIframe").src=d.kino.url;
-  }catch(e){}
-
-  // Config (Email)
-  try{const res=await fetch("config.json?nocache="+Date.now(),{cache:"no-store"});const cfg=await res.json();
-    defaultEmail=cfg.defaultEmail||defaultEmail;
-    if(cfg.pages&&cfg.pages[PAGE_ID]&&cfg.pages[PAGE_ID].email){pageEmail=cfg.pages[PAGE_ID].email;}
-  }catch(e){}
-
-  const overrideMail=localStorage.getItem(OVERRIDE_KEY)||"";
-  effective=overrideMail||pageEmail||defaultEmail;
-
-  document.getElementById("ctaCopyText").textContent=effective;
-  document.getElementById("ctaMailto").href="mailto:"+effective;
-
-  // Admin sichtbar machen
-  if(/(\?|&)admin=1(\b|$)/.test(location.search)){
-    document.getElementById("adminBox").style.display="block";
-    document.getElementById("adminPageId").textContent=PAGE_ID;
-    document.getElementById("adminMail").value=overrideMail||"";
-  }
-})();
-
-/* Admin Override */
-function setOverride(){
-  const pid=document.getElementById("adminPageId").textContent;
-  const mail=document.getElementById("adminMail").value.trim();
-  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail)){document.getElementById("adminMsg").textContent="⚠️ Ungültige E-Mail";document.getElementById("adminMsg").style.color="#c62828";return;}
-  localStorage.setItem("FSA_EMAIL_OVERRIDE_"+pid,mail);
-  document.getElementById("adminMsg").textContent="✅ Override gesetzt: "+mail;
-  document.getElementById("adminMsg").style.color="#2e7d32";
+/* Add */
+function addMsg(){
+  const v=document.getElementById("msgInput").value.trim();
+  if(!v) return;
+  messages.push(v);
+  document.getElementById("msgInput").value="";
+  render();
 }
-function resetOverride(){
-  const pid=document.getElementById("adminPageId").textContent;
-  localStorage.removeItem("FSA_EMAIL_OVERRIDE_"+pid);
-  document.getElementById("adminMsg").textContent="♻️ Override gelöscht";
-  document.getElementById("adminMsg").style.color="#f59e0b";
+
+/* Delete */
+function delMsg(i){
+  messages.splice(i,1);
+  render();
+}
+
+/* Export */
+function exportJSON(){
+  const out={messages};
+  const blob=new Blob([JSON.stringify(out,null,2)],{type:"application/json"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download="laufband.json";
+  a.click();
 }
 </script>
 </body>
