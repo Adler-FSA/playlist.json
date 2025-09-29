@@ -1,116 +1,96 @@
-<!doctype html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <title>🌐 FSA Global Viewer</title>
-  <style>
-    body{font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;margin:0;background:#fff;color:#111}
-    .wrap{padding:16px}
-    h2{margin:0 0 12px}
-    h3{margin:24px 0 8px}
-    .item{margin:12px 0;padding:8px;border:1px solid #ddd;border-radius:6px;background:#fafafa}
-    iframe{width:100%;height:280px;border:none;border-radius:6px}
-    audio{width:100%;margin-top:6px}
-    .ok{color:#15803d;font-weight:700;margin:8px 0}
-    .err{color:#b91c1c;font-weight:700;margin:8px 0}
+<!-- 🎬 FSA Media Viewer -->
+<div id="fsa-viewer" style="font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif; max-width:900px; margin:20px auto; padding:20px; background:#fff; border:1px solid #ddd; border-radius:10px; box-shadow:0 4px 12px rgba(0,0,0,.1);">
+  <h2 style="margin:0 0 12px; font-size:1.4rem; color:#111827;">🦅 Adler Media Rotator</h2>
 
-    /* Ticker styles */
-    #tickerBar{position:sticky;top:0;z-index:10;background:#0f172a;color:#fff;border-bottom:1px solid #0b1222}
-    .ticker-wrap{overflow:hidden;white-space:nowrap}
-    .ticker-line{display:inline-block;padding:10px 0;will-change:transform}
-    .ticker-line:hover{animation-play-state:paused}
-  </style>
-</head>
-<body>
-  <!-- Ticker oben -->
-  <div id="tickerBar" style="display:none">
-    <div class="ticker-wrap">
-      <div id="tickerLine" class="ticker-line"></div>
-    </div>
+  <!-- 📜 Laufband -->
+  <div id="laufband" style="background:#0f172a; color:#f8fafc; padding:8px 0; margin-bottom:12px; border-radius:6px; overflow:hidden;">
+    <marquee id="laufband-text" behavior="scroll" direction="left" scrollamount="6" style="font-size:1rem; font-weight:500;">
+      Lade Laufband ...
+    </marquee>
   </div>
 
-  <div class="wrap">
-    <h2>🌐 Globale Playlist</h2>
-    <div id="msg">Lade…</div>
-
-    <h3>🔴 Live-Event</h3>
-    <div id="live"></div>
-
-    <h3>📺 Videos</h3>
-    <div id="v"></div>
-
-    <h3>🎵 Musik</h3>
-    <div id="m"></div>
-    <audio id="aud" controls></audio>
+  <!-- 🎥 Rotator-Bereich -->
+  <div id="video-rotator" style="position:relative; width:100%; height:480px; background:#000; border-radius:8px; overflow:hidden;">
+    <div id="video-container" style="width:100%; height:100%;"></div>
   </div>
+</div>
 
-  <script>
-  (async function(){
-    const URL="https://adler-fsa.github.io/playlist.json/playlist.json";
-    const lang = (navigator.language||'de').toLowerCase().startsWith('de')?'de':'en';
-    function esc(s){return (s||"").replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))}
+<script>
+(async function(){
+  // --- 📜 Laufband laden ---
+  try {
+    const resLB = await fetch("laufband.json");
+    const texte = await resLB.json();
+    document.getElementById("laufband-text").textContent = texte.join("   |   ");
+  } catch(e){
+    document.getElementById("laufband-text").textContent = "⚠️ Laufband konnte nicht geladen werden.";
+  }
 
-    function buildTicker(ticker){
-      if(!ticker || !ticker.enabled || !Array.isArray(ticker.messages) || !ticker.messages.length) return;
-      const msgs = ticker.messages.map(m => m[lang] || m.de || m.en || '').filter(Boolean);
-      if(!msgs.length) return;
-      const line = msgs.join('   •   ');
-      const lineEl = document.getElementById('tickerLine');
-      lineEl.textContent = line;
+  // --- 🎵 Playlist laden ---
+  const response = await fetch("playlist.json");
+  const playlist = await response.json();
 
-      const pxPerChar = 10;
-      const totalPx = line.length * pxPerChar + window.innerWidth;
-      const speed = Math.max(20, Math.min(200, Number(ticker.speed)||60)); // px/s
-      const duration = totalPx / speed;
+  // Trennen: Audio / Video
+  const audioTracks = playlist.filter(item => item.src.endsWith(".mp3"));
+  const videoTracks = playlist.filter(item =>
+    item.src.endsWith(".mp4") || item.src.includes("youtube.com") || item.src.includes("youtu.be")
+  );
 
-      const animName = 'marquee_'+Math.random().toString(36).slice(2);
-      const style = document.createElement('style');
-      style.textContent = `
-        @keyframes ${animName} {
-          0% { transform: translateX(100%); }
-          100% { transform: translateX(-${totalPx}px); }
-        }
-      `;
-      document.head.appendChild(style);
-      lineEl.style.animation = `${animName} ${duration}s linear infinite`;
-      document.getElementById('tickerBar').style.display = 'block';
+  // 🎵 Audio im Hintergrund abspielen
+  if(audioTracks.length > 0){
+    const audio = document.createElement("audio");
+    audio.src = audioTracks[0].src;
+    audio.autoplay = true;
+    audio.loop = true;
+    audio.volume = 0.5;
+    audio.style.display = "none";
+    document.body.appendChild(audio);
+  }
+
+  // 🎥 Video Rotator
+  let currentVideo = 0;
+  const videoContainer = document.getElementById("video-container");
+
+  function showVideo(index){
+    const track = videoTracks[index];
+    videoContainer.innerHTML = ""; // Container leeren
+
+    if(track.src.endsWith(".mp4")){
+      // Lokales Video
+      const video = document.createElement("video");
+      video.src = track.src;
+      video.controls = true;
+      video.autoplay = true;
+      video.loop = false;
+      video.style.width = "100%";
+      video.style.height = "100%";
+      videoContainer.appendChild(video);
+
+      video.onended = () => nextVideo();
+    } else {
+      // YouTube
+      const iframe = document.createElement("iframe");
+      iframe.src = track.src.replace("youtu.be/","www.youtube.com/embed/").split("?")[0] + "?autoplay=1&rel=0";
+      iframe.width = "100%";
+      iframe.height = "100%";
+      iframe.allow = "autoplay; encrypted-media";
+      iframe.style.border = "0";
+      videoContainer.appendChild(iframe);
+
+      // YouTube automatisch nach 30s weiterschalten (anpassbar)
+      setTimeout(() => nextVideo(), 30000);
     }
+  }
 
-    try{
-      const r=await fetch(URL+'?nocache='+Date.now(),{cache:'no-store'});
-      if(!r.ok) throw new Error('HTTP '+r.status);
-      const d=await r.json();
+  function nextVideo(){
+    currentVideo = (currentVideo + 1) % videoTracks.length;
+    showVideo(currentVideo);
+  }
 
-      buildTicker(d.ticker);
+  // Starte Rotator
+  if(videoTracks.length > 0){
+    showVideo(currentVideo);
+  }
 
-      const msgEl = document.getElementById('msg');
-      msgEl.textContent='✅ Playlist geladen'; msgEl.className='ok';
-
-      const liveEl=document.getElementById('live');
-      if(d.live && d.live.url){
-        liveEl.innerHTML =
-          "<div class=item><b>"+esc(d.live.title||'Live-Stream')+"</b><br>"+
-          "<iframe src='"+esc(d.live.url)+"' allowfullscreen></iframe></div>";
-      }else{
-        liveEl.innerHTML='<em>Kein Live-Event</em>';
-      }
-
-      document.getElementById('v').innerHTML=(d.videos||[])
-        .map(v=>"<div class=item><b>"+esc(v.title)+"</b><br>"+
-          "<iframe src='"+esc(v.url)+"' allowfullscreen></iframe></div>")
-        .join('')||'<em>Keine Videos</em>';
-
-      document.getElementById('m').innerHTML=(d.music||[])
-        .map((m,i)=>"<div class=item>"+esc(m.title)+
-          " <button onclick=\"aud.src='"+esc(m.url)+"';aud.play()\">▶️</button>"+
-          " <button onclick=\"this.parentNode.remove();\">🗑️</button></div>")
-        .join('')||'<em>Keine Musik</em>';
-
-    }catch(e){
-      const msgEl = document.getElementById('msg');
-      msgEl.textContent='❌ Fehler: '+e.message; msgEl.className='err';
-    }
-  })();
-  </script>
-</body>
-</html>
+})();
+</script>
