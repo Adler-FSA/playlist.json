@@ -36,15 +36,28 @@
     item.src.endsWith(".mp4") || item.src.includes("youtube.com") || item.src.includes("youtu.be")
   );
 
-  // 🎵 Audio im Hintergrund abspielen
+  // 🎵 Audio im Hintergrund abspielen (alle MP3s nacheinander)
   if(audioTracks.length > 0){
+    let currentAudio = 0;
     const audio = document.createElement("audio");
-    audio.src = audioTracks[0].src;
     audio.autoplay = true;
-    audio.loop = true;
+    audio.loop = false; // wir steuern den Loop selbst
     audio.volume = 0.5;
     audio.style.display = "none";
     document.body.appendChild(audio);
+
+    function playAudio(index){
+      audio.src = audioTracks[index].src;
+      audio.play().catch(e => console.warn("Autoplay blockiert:", e));
+    }
+
+    audio.addEventListener("ended", () => {
+      currentAudio = (currentAudio + 1) % audioTracks.length;
+      playAudio(currentAudio);
+    });
+
+    // Starte mit erstem Song
+    playAudio(currentAudio);
   }
 
   // 🎥 Video Rotator
@@ -77,7 +90,7 @@
       iframe.style.border = "0";
       videoContainer.appendChild(iframe);
 
-      // YouTube automatisch nach 30s weiterschalten (anpassbar)
+      // YouTube automatisch nach 30s weiterschalten (kann angepasst werden)
       setTimeout(() => nextVideo(), 30000);
     }
   }
