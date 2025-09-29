@@ -9,6 +9,11 @@
     Aktiv: <strong id="count-active">0</strong>
   </div>
 
+  <!-- Export Button -->
+  <button onclick="exportCSV()" style="margin-bottom:14px; padding:10px 16px; background:#2563eb; color:#fff; border:none; border-radius:6px; cursor:pointer;">
+    📤 Exportieren (CSV)
+  </button>
+
   <!-- Tabelle -->
   <table style="width:100%; border-collapse:collapse; font-size:.95rem;">
     <thead>
@@ -83,6 +88,22 @@
     config.pages[id].status = "frei";
     render();
     alert("♻️ Seite zurückgesetzt auf Werkseinstellung: " + id);
+  };
+
+  // 📤 Export als CSV
+  window.exportCSV = function(){
+    let csv = "ID,Status,E-Mail\n";
+    Object.entries(config.pages).forEach(([id,data])=>{
+      csv += `${id},${data.status},${data.email}\n`;
+    });
+
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "landingpages.csv";
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
   render();
