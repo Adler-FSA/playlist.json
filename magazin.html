@@ -1,0 +1,97 @@
+<!-- 📰 FSA Magazin – Unikat Landingpages -->
+<div id="fsa-magazin" style="font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif; max-width:800px; margin:20px auto; padding:20px; background:#fff; border:1px solid #ddd; border-radius:10px; box-shadow:0 4px 12px rgba(0,0,0,.1);">
+  <h2 style="margin:0 0 12px; font-size:1.6rem; color:#111827;">📰 FSA Magazin – Deine eigene Landingpage</h2>
+  <p style="color:#444;">Zieh dir jetzt deine eigene FSA-Landingpage. Jede Seite ist ein Unikat und kann nur einmal vergeben werden.</p>
+
+  <!-- Übersicht -->
+  <div style="padding:12px; background:#f9fafb; border:1px solid #ccc; border-radius:8px; margin-bottom:14px;">
+    Noch freie Seiten: <strong id="mag-free">…</strong><br>
+    Bereits vergeben: <strong id="mag-active">…</strong>
+  </div>
+
+  <!-- Aktion -->
+  <button id="btn-reservieren" style="padding:12px 20px; font-size:1rem; background:#2563eb; color:#fff; border:none; border-radius:6px; cursor:pointer;">
+    🎲 Jetzt Landingpage reservieren
+  </button>
+
+  <!-- Ausgabe -->
+  <div id="mag-output" style="margin-top:20px; font-weight:bold; color:#2c3e50;"></div>
+</div>
+
+<script>
+(async function(){
+  // Config laden
+  let config = { pages: {} };
+  try {
+    const res = await fetch("config.json");
+    config = await res.json();
+  } catch(e){
+    console.warn("⚠️ config.json nicht gefunden.");
+  }
+
+  const freeCountEl = document.getElementById("mag-free");
+  const activeCountEl = document.getElementById("mag-active");
+  const outputEl = document.getElementById("mag-output");
+
+  // ===== Unikat-ID Generator =====
+  function genId(){
+    const d = new Date();
+    const dateStr = d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,'0')+"-"+String(d.getDate()).padStart(2,'0');
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    let code = "";
+    for(let i=0;i<4;i++){ code += chars.charAt(Math.floor(Math.random()*chars.length)); }
+    return `FSA-${dateStr}-${code}`;
+  }
+
+  // ===== Counts aktualisieren =====
+  function updateCounts(){
+    let free = 0, active = 0;
+    Object.values(config.pages).forEach(p=>{
+      if(p.status === "frei") free++;
+      else active++;
+    });
+    freeCountEl.textContent = free;
+    activeCountEl.textContent = active;
+
+    // ✨ Automatisch auffüllen falls < 10 frei
+    if(free < 10){
+      const needed = 50 - free;
+      for(let i=0; i<needed; i++){
+        const id = genId();
+        config.pages[id] = { email: "platzhalter@email.de", status: "frei" };
+      }
+      outputEl.innerHTML = `♻️ Automatisch aufgefüllt: jetzt wieder 50 freie Seiten verfügbar.`;
+      updateCounts(); // neu zählen
+    }
+  }
+
+  // ===== Nächste freie Seite holen =====
+  function getNextFreePage(){
+    for(const [id, data] of Object.entries(config.pages)){
+      if(data.status === "frei"){
+        return {id, data};
+      }
+    }
+    return null;
+  }
+
+  // ===== Button reservieren =====
+  document.getElementById("btn-reservieren").addEventListener("click", ()=>{
+    const next = getNextFreePage();
+    if(!next){
+      outputEl.textContent = "❌ Leider sind aktuell keine freien Landingpages verfügbar.";
+      return;
+    }
+    // Status ändern
+    config.pages[next.id].status = "aktiv";
+    updateCounts();
+
+    const url = "https://finanziellesouveraenitaet.de/" + next.id;
+    outputEl.innerHTML = `✅ Deine Landingpage: <a href="${url}" target="_blank" style="color:#2563eb">${url}</a><br>
+      ℹ️ Trage dort im Admin-Panel deine persönliche E-Mail ein.`;
+  });
+
+  // Init
+  updateCounts();
+})();
+</script>
