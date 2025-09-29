@@ -1,7 +1,56 @@
 <!doctype html>
-<html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>FSA Playlist Dashboard</title>
+  <style>
+    body{font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;margin:0;padding:20px;background:#f9fafb;color:#111}
+    h1{margin-top:0;color:#1f2937}
+    h2{margin-top:24px;color:#111827}
+    .item{margin:12px 0;padding:12px;border:1px solid #ddd;border-radius:8px;background:#fff}
+    iframe{width:100%;height:300px;border:none;border-radius:6px}
+    audio{width:100%;margin-top:8px}
+    button{margin-left:8px;padding:4px 8px;border:none;border-radius:4px;background:#2ecc71;color:#fff;cursor:pointer}
+  </style>
+</head>
 <body>
-  <h1>Hallo FSA 🚀</h1>
-  <p>Wenn du das siehst, läuft GitHub Pages.</p>
+  <h1>🎬 FSA Global Playlist Dashboard</h1>
+  <div id="live"></div>
+  <div id="videos"></div>
+  <div id="music"></div>
+
+  <script>
+  (async function(){
+    const url="playlist.json";
+    try {
+      const res=await fetch(url);
+      const data=await res.json();
+
+      // Live Event
+      if(data.live){
+        document.getElementById("live").innerHTML =
+          "<h2>🔴 Live-Event</h2><div class=item><p><b>"+data.live.title+"</b></p>"+
+          "<iframe src='"+data.live.url+"' allowfullscreen></iframe></div>";
+      }
+
+      // Videos
+      document.getElementById("videos").innerHTML =
+        "<h2>📺 Videos</h2>"+data.videos.map(v=>
+          "<div class=item><p><b>"+v.title+"</b></p><iframe src='"+v.url+"' allowfullscreen></iframe></div>"
+        ).join("");
+
+      // Musik
+      let audioList = data.music.map((m,i)=>
+        "<div class=item>"+m.title+
+        " <button onclick=\"document.getElementById('aud').src='"+m.url+"';document.getElementById('aud').play()\">▶️ Abspielen</button></div>"
+      ).join("");
+      document.getElementById("music").innerHTML="<h2>🎵 Musik</h2>"+audioList+"<audio id=aud controls></audio>";
+
+    } catch(e){
+      document.body.innerHTML="<p style=color:red>⚠️ Fehler beim Laden der Playlist</p>";
+    }
+  })();
+  </script>
 </body>
 </html>
