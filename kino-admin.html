@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FSA Kino Admin</title>
+<style>
+  body{font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;background:#f9fafb;color:#111;margin:0;padding:20px}
+  h1{margin-top:0;color:#1f2937}
+  .card{background:#fff;border:1px solid #ddd;border-radius:10px;padding:20px;max-width:720px;margin:0 auto 20px;box-shadow:0 4px 12px rgba(0,0,0,.08)}
+  .row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+  input{flex:1;min-width:240px;padding:10px;border:1px solid #bbb;border-radius:6px}
+  button{padding:10px 16px;border:none;border-radius:6px;font-weight:600;cursor:pointer}
+  .btn{background:#2563eb;color:#fff}
+  .btn-green{background:#16a34a;color:#fff}
+  .btn-red{background:#dc2626;color:#fff}
+  .note{font-size:.9rem;color:#555}
+</style>
+</head>
+<body>
+  <h1>🎬 FSA Kino Admin</h1>
+
+  <div class="card">
+    <h2>📅 Kino-Event bearbeiten</h2>
+    <div class="row">
+      <label style="flex:1">Datum & Uhrzeit<br>
+        <input id="kinoDate" type="datetime-local">
+      </label>
+    </div>
+    <div class="row">
+      <label style="flex:1">Ankündigungstext<br>
+        <input id="kinoText" type="text" placeholder="🔔 Heute 20:00 Uhr – Spezial Zoom-Session">
+      </label>
+    </div>
+    <div class="row">
+      <label style="flex:1">Video-URL<br>
+        <input id="kinoVideo" type="url" placeholder="https://youtube.com/embed/...">
+      </label>
+    </div>
+    <div class="row">
+      <button class="btn-green" onclick="applyLocal()">💡 Lokal setzen</button>
+      <button class="btn" onclick="exportJSON()">💾 Export JSON</button>
+      <button class="btn-red" onclick="clearLocal()">🗑️ Reset</button>
+    </div>
+    <p id="msg" class="note">…</p>
+  </div>
+
+  <div class="card">
+    <h2>🔍 Vorschau</h2>
+    <pre id="preview" style="background:#f3f4f6;padding:10px;border-radius:6px;font-size:.9rem"></pre>
+  </div>
+
+<script>
+let localEvent=null;
+
+/* Nachricht anzeigen */
+function message(t,ok=true){
+  const el=document.getElementById("msg");
+  el.style.color=ok?"green":"red";
+  el.textContent=t;
+  setTimeout(()=>el.textContent="…",4000);
+}
+
+/* Lokale Daten setzen */
+function applyLocal(){
+  const date=document.getElementById("kinoDate").value;
+  const text=document.getElementById("kinoText").value.trim();
+  const video=document.getElementById("kinoVideo").value.trim();
+  if(!date || !text || !video){ message("⚠️ Bitte alle Felder ausfüllen",false); return; }
+  localEvent={event:{date,text,video}};
+  render();
+  message("✅ Lokal gespeichert");
+}
+
+/* JSON exportieren */
+function exportJSON(){
+  if(!localEvent){ message("⚠️ Nichts zu exportieren",false); return; }
+  const blob=new Blob([JSON.stringify(localEvent,null,2)],{type:"application/json"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download="kino.json";
+  a.click();
+  message("💾 Export erstellt");
+}
+
+/* Reset */
+function clearLocal(){
+  localEvent=null;
+  render();
+  message("🗑️ Lokal zurückgesetzt");
+}
+
+/* Vorschau rendern */
+function render(){
+  document.getElementById("preview").textContent=localEvent?JSON.stringify(localEvent,null,2):"– keine Daten –";
+}
+
+/* Init: Versuche bestehende kino.json zu laden */
+(async function(){
+  try{
+    const res=await fetch("kino.json?nocache="+Date.now());
+    if(res.ok){
+      const data=await res.json();
+      localEvent=data;
+      render();
+    }
+  }catch(e){/* egal */}
+})();
+</script>
+</body>
+</html>
