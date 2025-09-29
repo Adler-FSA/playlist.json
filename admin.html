@@ -1,36 +1,90 @@
-<!-- ⚙️ Admin Panel: FSA Einstellungen -->
-<div id="fsa-admin" style="font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif; max-width:600px; margin:20px auto; padding:20px; background:#fff; border:1px solid #ddd; border-radius:10px; box-shadow:0 4px 12px rgba(0,0,0,.1);">
-  <h2 style="margin:0 0 12px; font-size:1.4rem; color:#111827;">⚙️ FSA Admin – Einstellungen</h2>
+<!-- ⚙️ Admin Panel – Übersicht & Steuerung -->
+<div id="fsa-admin" style="font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif; max-width:960px; margin:20px auto; padding:20px; background:#fff; border:1px solid #ddd; border-radius:10px; box-shadow:0 4px 12px rgba(0,0,0,.1);">
+  <h2 style="margin:0 0 12px; font-size:1.4rem; color:#111827;">⚙️ FSA Admin – Übersicht aller Landingpages</h2>
 
-  <!-- 📧 E-Mail Feld -->
-  <label for="admin-email">📧 Kontakt-E-Mail</label><br>
-  <input id="admin-email" type="email" style="width:100%; padding:6px; margin-top:6px;" placeholder="deine@email.de">
-  
-  <button onclick="saveEmail()" style="margin-top:10px; padding:8px 14px; background:#2563eb; color:#fff; border:none; border-radius:6px; cursor:pointer;">
-    Speichern
-  </button>
+  <!-- Zähler -->
+  <div style="padding:12px; background:#f9fafb; border:1px solid #ccc; border-radius:8px; margin-bottom:14px;">
+    Gesamt: <strong id="count-total">0</strong> |
+    Frei: <strong id="count-free">0</strong> |
+    Aktiv: <strong id="count-active">0</strong>
+  </div>
+
+  <!-- Tabelle -->
+  <table style="width:100%; border-collapse:collapse; font-size:.95rem;">
+    <thead>
+      <tr style="background:#f3f4f6; text-align:left;">
+        <th style="padding:8px; border:1px solid #ddd;">ID</th>
+        <th style="padding:8px; border:1px solid #ddd;">Status</th>
+        <th style="padding:8px; border:1px solid #ddd;">E-Mail</th>
+        <th style="padding:8px; border:1px solid #ddd;">Aktionen</th>
+      </tr>
+    </thead>
+    <tbody id="page-list"></tbody>
+  </table>
 </div>
 
 <script>
-async function loadConfig(){
+(async function(){
+  let config = { pages: {} };
   try {
     const res = await fetch("config.json");
-    const config = await res.json();
-    document.getElementById("admin-email").value = config.email || "";
+    config = await res.json();
   } catch(e){
-    console.warn("Config konnte nicht geladen werden:", e);
+    console.warn("⚠️ config.json nicht geladen.");
   }
-}
 
-async function saveEmail(){
-  const email = document.getElementById("admin-email").value;
-  if(email && email.includes("@")){
-    alert("✅ E-Mail gespeichert: " + email + "\n\nFalls du einen Fehler gemacht hast, melde dich – wir können deine Seite auf Werkseinstellung zurücksetzen.");
-    // hier könnte die E-Mail auch in ein JSON oder localStorage geschrieben werden
-  } else {
-    alert("⚠️ Bitte eine gültige E-Mail eingeben!");
+  const listEl = document.getElementById("page-list");
+  const totalEl = document.getElementById("count-total");
+  const freeEl = document.getElementById("count-free");
+  const activeEl = document.getElementById("count-active");
+
+  function render(){
+    let total=0, free=0, active=0;
+    const rows = Object.entries(config.pages).map(([id,data])=>{
+      total++;
+      if(data.status==="frei") free++; else active++;
+
+      return `
+        <tr>
+          <td style="padding:6px; border:1px solid #ddd;">${id}</td>
+          <td style="padding:6px; border:1px solid #ddd; color:${data.status==="frei"?"green":"#2563eb"}; font-weight:bold;">${data.status}</td>
+          <td style="padding:6px; border:1px solid #ddd;">
+            <input id="mail-${id}" type="email" value="${data.email}" style="width:95%; padding:4px; border:1px solid #bbb; border-radius:4px;">
+          </td>
+          <td style="padding:6px; border:1px solid #ddd;">
+            <button onclick="setEmail('${id}')" style="padding:4px 8px; background:#16a34a; color:#fff; border:none; border-radius:4px; cursor:pointer;">✅ Speichern</button>
+            <button onclick="resetPage('${id}')" style="padding:4px 8px; background:#e11d48; color:#fff; border:none; border-radius:4px; cursor:pointer;">🏭 Reset</button>
+          </td>
+        </tr>
+      `;
+    });
+
+    listEl.innerHTML = rows.join("");
+    totalEl.textContent = total;
+    freeEl.textContent = free;
+    activeEl.textContent = active;
   }
-}
 
-loadConfig();
+  // Aktionen
+  window.setEmail = function(id){
+    const mail = document.getElementById("mail-"+id).value.trim();
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail)){
+      alert("⚠️ Ungültige E-Mail.");
+      return;
+    }
+    config.pages[id].email = mail;
+    config.pages[id].status = "aktiv";
+    render();
+    alert("✅ E-Mail aktualisiert für " + id);
+  };
+
+  window.resetPage = function(id){
+    config.pages[id].email = "platzhalter@email.de";
+    config.pages[id].status = "frei";
+    render();
+    alert("♻️ Seite zurückgesetzt auf Werkseinstellung: " + id);
+  };
+
+  render();
+})();
 </script>
