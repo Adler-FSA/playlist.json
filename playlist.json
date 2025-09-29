@@ -35,20 +35,12 @@
 
   "music": [
     {
-      "title": "Kai Engel – Moonlight Reprise",
-      "url": "https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Kai_Engel/Chapter_One/Kai_Engel_-_07_-_Moonlight_Reprise.mp3"
+      "title": "Greensleeves (Instrumental, Wikimedia)",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/4/45/Greensleeves.ogg"
     },
     {
-      "title": "Chris Zabriskie – Temperature of the Air",
-      "url": "https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Chris_Zabriskie/Divider/Chris_Zabriskie_-_04_-_The_Temperature_of_the_Air_on_the_Bow_of_the_Kaleetan.mp3"
-    },
-    {
-      "title": "Kevin MacLeod – Soaring",
-      "url": "https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Kevin_MacLeod/Ambient/Soaring.mp3"
-    },
-    {
-      "title": "Borrtex – Inspirational",
-      "url": "https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Borrtex/Borrtex/Borrtex_-_02_-_Inspirational.mp3"
+      "title": "Moonlight Sonata – Beethoven (Piano)",
+      "url": "https://archive.org/download/MoonlightSonata_Beethoven/Bethoven-Moonlight-Sonata.mp3"
     }
   ]
 }
