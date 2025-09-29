@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FSA Laufband Admin</title>
+<style>
+  body{font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;background:#f9fafb;color:#111;margin:0;padding:20px}
+  h1{margin-top:0;color:#1f2937}
+  .card{background:#fff;border:1px solid #ddd;border-radius:10px;padding:20px;max-width:720px;margin:0 auto 20px;box-shadow:0 4px 12px rgba(0,0,0,.08)}
+  .row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+  input{flex:1;min-width:240px;padding:10px;border:1px solid #bbb;border-radius:6px}
+  button{padding:10px 16px;border:none;border-radius:6px;font-weight:600;cursor:pointer}
+  .btn{background:#2563eb;color:#fff}
+  .btn-green{background:#16a34a;color:#fff}
+  .btn-red{background:#dc2626;color:#fff}
+  .note{font-size:.9rem;color:#555}
+  ul{padding-left:20px}
+  li{margin:6px 0}
+</style>
+</head>
+<body>
+  <h1>📰 FSA Laufband Admin</h1>
+
+  <div class="card">
+    <h2>➕ Nachricht hinzufügen</h2>
+    <div class="row">
+      <input id="msgInput" type="text" placeholder="z. B. 🚀 Neues Webinar am Freitag 20 Uhr!">
+      <button class="btn-green" onclick="addMsg()">Hinzufügen</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📋 Aktuelle Nachrichten</h2>
+    <ul id="msgList"><li class="note">– keine –</li></ul>
+    <div class="row">
+      <button class="btn" onclick="exportJSON()">💾 Export JSON</button>
+      <button class="btn-red" onclick="clearAll()">🗑️ Alle löschen</button>
+    </div>
+    <p id="msg" class="note">…</p>
+  </div>
+
+<script>
+let msgs=[];
+
+/* Nachricht anzeigen */
+function message(t,ok=true){
+  const el=document.getElementById("msg");
+  el.style.color=ok?"green":"red";
+  el.textContent=t;
+  setTimeout(()=>el.textContent="…",4000);
+}
+
+/* Render */
+function render(){
+  const list=document.getElementById("msgList");
+  if(msgs.length===0){ list.innerHTML='<li class="note">– keine –</li>'; return; }
+  list.innerHTML=msgs.map((m,i)=>`<li>${m} <button onclick="delMsg(${i})" style="margin-left:8px;padding:2px 6px;background:#dc2626;color:#fff;border:none;border-radius:4px;cursor:pointer">🗑️</button></li>`).join("");
+}
+
+/* Add */
+function addMsg(){
+  const val=document.getElementById("msgInput").value.trim();
+  if(!val){ message("⚠️ Bitte Text eingeben",false); return; }
+  msgs.push(val);
+  document.getElementById("msgInput").value="";
+  render();
+  message("✅ Nachricht hinzugefügt");
+}
+
+/* Delete */
+function delMsg(i){
+  msgs.splice(i,1);
+  render();
+  message("🗑️ Nachricht gelöscht");
+}
+
+/* Clear all */
+function clearAll(){
+  msgs=[];
+  render();
+  message("🗑️ Alle gelöscht");
+}
+
+/* Export */
+function exportJSON(){
+  if(msgs.length===0){ message("⚠️ Keine Nachrichten",false); return; }
+  const out={messages:msgs};
+  const blob=new Blob([JSON.stringify(out,null,2)],{type:"application/json"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download="laufband.json";
+  a.click();
+  message("💾 Export erstellt");
+}
+
+/* Init: alte laufband.json laden */
+(async function(){
+  try{
+    const res=await fetch("laufband.json?nocache="+Date.now());
+    if(res.ok){
+      const data=await res.json();
+      msgs=data.messages||[];
+      render();
+    }
+  }catch(e){/* egal */}
+})();
+</script>
+</body>
+</html>
