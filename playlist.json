@@ -1,21 +1,54 @@
 {
-  "version": 1,
-  "updated": "2025-09-30T20:00:00Z",
-  "rotation": "weekly",
-  "videos": [
-    { "title": "Adlerflug 1", "url": "https://www.youtube.com/embed/CqesPVWSzao" },
-    { "title": "Adlerflug 2", "url": "https://www.youtube.com/embed/qPlWNJ__Z1Q" },
-    { "title": "Adlerflug 3", "url": "https://www.youtube.com/embed/WcuSPqefQBY" },
-    { "title": "Adler (General)", "url": "https://www.youtube.com/embed/miWBKSszEIw" }
-  ],
-  "music": [
-    { "title": "Moonlight Sonata – Beethoven", "url": "https://archive.org/download/MoonlightSonata_Beethoven/Bethoven-Moonlight-Sonata.mp3" },
-    { "title": "Soaring – Kevin MacLeod", "url": "https://archive.org/download/KevinMacLeod_Ambient/Soaring.mp3" },
-    { "title": "The Temperature of the Air – Chris Zabriskie", "url": "https://archive.org/download/ChrisZabriskieAmbient/TemperatureOfAir.mp3" },
-    { "title": "At Rest – Kevin MacLeod", "url": "https://archive.org/download/AtRest_48/AtRest.mp3" }
-  ],
+  "ticker": {
+    "enabled": true,
+    "speed": 60,
+    "messages": [
+      { "de": "Willkommen bei der FSA Akademie", "en": "Welcome to the FSA Academy" },
+      { "de": "Nächster Live-Call heute 20:00 Uhr", "en": "Next live call today 8 PM" },
+      { "de": "Gemeinsam zu finanzieller Souveränität", "en": "Together to financial sovereignty" }
+    ]
+  },
+
   "live": {
-    "title": "FSA Global Zoom Call",
-    "url": "https://zoom.us/j/1234567890"
-  }
+    "title": "FSA Global Zoom Meeting",
+    "url": "https://www.youtube.com/embed/21X5lGlDOfg"
+  },
+
+  "videos": [
+    {
+      "title": "Adler Inspiration",
+      "url": "https://www.youtube.com/embed/miWBKSszEIw"
+    },
+    {
+      "title": "Motivation 1",
+      "url": "https://www.youtube.com/embed/CqesPVWSzao"
+    },
+    {
+      "title": "Motivation 2",
+      "url": "https://www.youtube.com/embed/qPlWNJ__Z1Q"
+    },
+    {
+      "title": "Motivation 3",
+      "url": "https://www.youtube.com/embed/WcuSPqefQBY"
+    }
+  ],
+
+  "music": [
+    {
+      "title": "Kai Engel – Moonlight Reprise",
+      "url": "https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Kai_Engel/Chapter_One/Kai_Engel_-_07_-_Moonlight_Reprise.mp3"
+    },
+    {
+      "title": "Chris Zabriskie – Temperature of the Air",
+      "url": "https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Chris_Zabriskie/Divider/Chris_Zabriskie_-_04_-_The_Temperature_of_the_Air_on_the_Bow_of_the_Kaleetan.mp3"
+    },
+    {
+      "title": "Kevin MacLeod – Soaring",
+      "url": "https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Kevin_MacLeod/Ambient/Soaring.mp3"
+    },
+    {
+      "title": "Borrtex – Inspirational",
+      "url": "https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Borrtex/Borrtex/Borrtex_-_02_-_Inspirational.mp3"
+    }
+  ]
 }
