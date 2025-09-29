@@ -1,78 +1,99 @@
-{
-  "ticker": {
-    "enabled": true,
-    "speed": 60,
-    "messages": [
-      { "de": "Willkommen bei der FSA Akademie", "en": "Welcome to the FSA Academy" },
-      { "de": "Nächster Live-Call heute 20:00 Uhr", "en": "Next live call today 8 PM" },
-      { "de": "Gemeinsam zu finanzieller Souveränität", "en": "Together to financial sovereignty" }
-    ]
+[
+  // --- Eigene Songs ---
+  {
+    "title": "Black Mage of Asgard",
+    "src": "black-mage-of-asgard-background-orchestral-epic-music-for-video-328712.mp3"
+  },
+  {
+    "title": "Happy Day",
+    "src": "happy-day-148320.mp3"
+  },
+  {
+    "title": "Ice of Sofia",
+    "src": "ice-of-sofia-background-dramatic-orchestral-music-for-video-60-second-331089.mp3"
+  },
+  {
+    "title": "Ruins of Fire (60s)",
+    "src": "ruins-of-fire-background-epic-orchestral-music-for-video-60-second-323960.mp3"
+  },
+  {
+    "title": "Ruins of Fire (Full Version)",
+    "src": "ruins-of-fire-background-epic-orchestral-music-for-video-full-ver-323965.mp3"
+  },
+  {
+    "title": "Spring Energy",
+    "src": "spring-energy-320531.mp3"
+  },
+  {
+    "title": "Terra Mater – Inspiring Epic",
+    "src": "terra-mater-inspiring-cinematic-epic-272565.mp3"
   },
 
-  "live": {
-    "title": "FSA Global Zoom Meeting",
-    "url": "https://www.youtube.com/embed/21X5lGlDOfg"
+  // --- Musik aus LP General Code 1 ---
+  {
+    "title": "terra-mater-inspiring-cinematic-epic-272565",
+    "src": "terra-mater-inspiring-cinematic-epic-272565.mp3"
+  },
+  {
+    "title": "epic-adventure-trailer-123456",
+    "src": "epic-adventure-trailer-123456.mp3"
+  },
+  {
+    "title": "motivational-cinematic-score-789101",
+    "src": "motivational-cinematic-score-789101.mp3"
   },
 
-  "videos": [
-    {
-      "title": "Adler Inspiration",
-      "url": "https://www.youtube.com/embed/miWBKSszEIw"
-    },
-    {
-      "title": "Motivation 1",
-      "url": "https://www.youtube.com/embed/CqesPVWSzao"
-    },
-    {
-      "title": "Motivation 2",
-      "url": "https://www.youtube.com/embed/qPlWNJ__Z1Q"
-    },
-    {
-      "title": "Motivation 3",
-      "url": "https://www.youtube.com/embed/WcuSPqefQBY"
-    }
-  ],
+  // --- Platzhalter Audio ---
+  { "title": "Platzhalter Audio 1", "src": "placeholder-audio-1.mp3" },
+  { "title": "Platzhalter Audio 2", "src": "placeholder-audio-2.mp3" },
+  { "title": "Platzhalter Audio 3", "src": "placeholder-audio-3.mp3" },
+  { "title": "Platzhalter Audio 4", "src": "placeholder-audio-4.mp3" },
+  { "title": "Platzhalter Audio 5", "src": "placeholder-audio-5.mp3" },
+  { "title": "Platzhalter Audio 6", "src": "placeholder-audio-6.mp3" },
+  { "title": "Platzhalter Audio 7", "src": "placeholder-audio-7.mp3" },
+  { "title": "Platzhalter Audio 8", "src": "placeholder-audio-8.mp3" },
+  { "title": "Platzhalter Audio 9", "src": "placeholder-audio-9.mp3" },
+  { "title": "Platzhalter Audio 10", "src": "placeholder-audio-10.mp3" },
+  { "title": "Platzhalter Audio 11", "src": "placeholder-audio-11.mp3" },
+  { "title": "Platzhalter Audio 12", "src": "placeholder-audio-12.mp3" },
+  { "title": "Platzhalter Audio 13", "src": "placeholder-audio-13.mp3" },
+  { "title": "Platzhalter Audio 14", "src": "placeholder-audio-14.mp3" },
+  { "title": "Platzhalter Audio 15", "src": "placeholder-audio-15.mp3" },
+  { "title": "Platzhalter Audio 16", "src": "placeholder-audio-16.mp3" },
+  { "title": "Platzhalter Audio 17", "src": "placeholder-audio-17.mp3" },
+  { "title": "Platzhalter Audio 18", "src": "placeholder-audio-18.mp3" },
+  { "title": "Platzhalter Audio 19", "src": "placeholder-audio-19.mp3" },
+  { "title": "Platzhalter Audio 20", "src": "placeholder-audio-20.mp3" },
+  { "title": "Platzhalter Audio 21", "src": "placeholder-audio-21.mp3" },
+  { "title": "Platzhalter Audio 22", "src": "placeholder-audio-22.mp3" },
+  { "title": "Platzhalter Audio 23", "src": "placeholder-audio-23.mp3" },
+  { "title": "Platzhalter Audio 24", "src": "placeholder-audio-24.mp3" },
+  { "title": "Platzhalter Audio 25", "src": "placeholder-audio-25.mp3" },
+  { "title": "Platzhalter Audio 26", "src": "placeholder-audio-26.mp3" },
+  { "title": "Platzhalter Audio 27", "src": "placeholder-audio-27.mp3" },
+  { "title": "Platzhalter Audio 28", "src": "placeholder-audio-28.mp3" },
+  { "title": "Platzhalter Audio 29", "src": "placeholder-audio-29.mp3" },
+  { "title": "Platzhalter Audio 30", "src": "placeholder-audio-30.mp3" },
 
-  "music": [
-    {
-      "title": "Track 1 – Terra Mater",
-      "url": "https://adler-fsa.github.io/playlist.json/terra-mater-inspiring-cinematic-epic-272565.mp3"
-    },
-    {
-      "title": "Track 2 – Platzhalter",
-      "url": "https://adler-fsa.github.io/playlist.json/musik2.mp3"
-    },
-    {
-      "title": "Track 3 – Platzhalter",
-      "url": "https://adler-fsa.github.io/playlist.json/musik3.mp3"
-    },
-    {
-      "title": "Track 4 – Platzhalter",
-      "url": "https://adler-fsa.github.io/playlist.json/musik4.mp3"
-    },
-    {
-      "title": "Track 5 – Platzhalter",
-      "url": "https://adler-fsa.github.io/playlist.json/musik5.mp3"
-    },
-    {
-      "title": "Track 6 – Platzhalter",
-      "url": "https://adler-fsa.github.io/playlist.json/musik6.mp3"
-    },
-    {
-      "title": "Track 7 – Platzhalter",
-      "url": "https://adler-fsa.github.io/playlist.json/musik7.mp3"
-    },
-    {
-      "title": "Track 8 – Platzhalter",
-      "url": "https://adler-fsa.github.io/playlist.json/musik8.mp3"
-    },
-    {
-      "title": "Track 9 – Platzhalter",
-      "url": "https://adler-fsa.github.io/playlist.json/musik9.mp3"
-    },
-    {
-      "title": "Track 10 – Platzhalter",
-      "url": "https://adler-fsa.github.io/playlist.json/musik10.mp3"
-    }
-  ]
-}
+  // --- Platzhalter Video ---
+  { "title": "Platzhalter Video 1", "src": "placeholder-video-1.mp4" },
+  { "title": "Platzhalter Video 2", "src": "placeholder-video-2.mp4" },
+  { "title": "Platzhalter Video 3", "src": "placeholder-video-3.mp4" },
+  { "title": "Platzhalter Video 4", "src": "placeholder-video-4.mp4" },
+  { "title": "Platzhalter Video 5", "src": "placeholder-video-5.mp4" },
+  { "title": "Platzhalter Video 6", "src": "placeholder-video-6.mp4" },
+  { "title": "Platzhalter Video 7", "src": "placeholder-video-7.mp4" },
+  { "title": "Platzhalter Video 8", "src": "placeholder-video-8.mp4" },
+  { "title": "Platzhalter Video 9", "src": "placeholder-video-9.mp4" },
+  { "title": "Platzhalter Video 10", "src": "placeholder-video-10.mp4" },
+  { "title": "Platzhalter Video 11", "src": "placeholder-video-11.mp4" },
+  { "title": "Platzhalter Video 12", "src": "placeholder-video-12.mp4" },
+  { "title": "Platzhalter Video 13", "src": "placeholder-video-13.mp4" },
+  { "title": "Platzhalter Video 14", "src": "placeholder-video-14.mp4" },
+  { "title": "Platzhalter Video 15", "src": "placeholder-video-15.mp4" },
+  { "title": "Platzhalter Video 16", "src": "placeholder-video-16.mp4" },
+  { "title": "Platzhalter Video 17", "src": "placeholder-video-17.mp4" },
+  { "title": "Platzhalter Video 18", "src": "placeholder-video-18.mp4" },
+  { "title": "Platzhalter Video 19", "src": "placeholder-video-19.mp4" },
+  { "title": "Platzhalter Video 20", "src": "placeholder-video-20.mp4" }
+]
