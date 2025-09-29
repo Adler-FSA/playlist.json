@@ -4,67 +4,111 @@
   <meta charset="utf-8">
   <title>🌐 FSA Global Viewer</title>
   <style>
-    body{font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;
-         margin:0;background:#fff;color:#111;padding:16px}
-    h2{margin-top:0}
-    h3{margin-top:24px;margin-bottom:8px}
-    .item{margin:12px 0;padding:8px;border:1px solid #ddd;
-          border-radius:6px;background:#fafafa}
+    body{font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;margin:0;background:#fff;color:#111}
+    .wrap{padding:16px}
+    h2{margin:0 0 12px}
+    h3{margin:24px 0 8px}
+    .item{margin:12px 0;padding:8px;border:1px solid #ddd;border-radius:6px;background:#fafafa}
     iframe{width:100%;height:280px;border:none;border-radius:6px}
     audio{width:100%;margin-top:6px}
-    .ok{color:#15803d;font-weight:700}
-    .err{color:#b91c1c;font-weight:700}
+    .ok{color:#15803d;font-weight:700;margin:8px 0}
+    .err{color:#b91c1c;font-weight:700;margin:8px 0}
+
+    /* Ticker styles */
+    #tickerBar{position:sticky;top:0;z-index:10;background:#0f172a;color:#fff;border-bottom:1px solid #0b1222}
+    .ticker-wrap{overflow:hidden;white-space:nowrap}
+    .ticker-line{display:inline-block;padding:10px 0;will-change:transform}
+    .ticker-line:hover{animation-play-state:paused}
   </style>
 </head>
 <body>
-  <h2>🌐 Globale Playlist</h2>
-  <div id="msg">Lade…</div>
+  <!-- Ticker oben -->
+  <div id="tickerBar" style="display:none">
+    <div class="ticker-wrap">
+      <div id="tickerLine" class="ticker-line"></div>
+    </div>
+  </div>
 
-  <h3>🔴 Live-Event</h3>
-  <div id="live"></div>
+  <div class="wrap">
+    <h2>🌐 Globale Playlist</h2>
+    <div id="msg">Lade…</div>
 
-  <h3>📺 Videos</h3>
-  <div id="v"></div>
+    <h3>🔴 Live-Event</h3>
+    <div id="live"></div>
 
-  <h3>🎵 Musik</h3>
-  <div id="m"></div>
-  <audio id="aud" controls></audio>
+    <h3>📺 Videos</h3>
+    <div id="v"></div>
+
+    <h3>🎵 Musik</h3>
+    <div id="m"></div>
+    <audio id="aud" controls></audio>
+  </div>
 
   <script>
   (async function(){
     const URL="https://adler-fsa.github.io/playlist.json/playlist.json";
+    const lang = (navigator.language||'de').toLowerCase().startsWith('de')?'de':'en';
     function esc(s){return (s||"").replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))}
+
+    function buildTicker(ticker){
+      if(!ticker || !ticker.enabled || !Array.isArray(ticker.messages) || !ticker.messages.length) return;
+      const msgs = ticker.messages.map(m => m[lang] || m.de || m.en || '').filter(Boolean);
+      if(!msgs.length) return;
+      const line = msgs.join('   •   ');
+      const lineEl = document.getElementById('tickerLine');
+      lineEl.textContent = line;
+
+      const pxPerChar = 10;
+      const totalPx = line.length * pxPerChar + window.innerWidth;
+      const speed = Math.max(20, Math.min(200, Number(ticker.speed)||60)); // px/s
+      const duration = totalPx / speed;
+
+      const animName = 'marquee_'+Math.random().toString(36).slice(2);
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes ${animName} {
+          0% { transform: translateX(100%); }
+          100% { transform: translateX(-${totalPx}px); }
+        }
+      `;
+      document.head.appendChild(style);
+      lineEl.style.animation = `${animName} ${duration}s linear infinite`;
+      document.getElementById('tickerBar').style.display = 'block';
+    }
+
     try{
       const r=await fetch(URL+'?nocache='+Date.now(),{cache:'no-store'});
       if(!r.ok) throw new Error('HTTP '+r.status);
       const d=await r.json();
-      document.getElementById('msg').textContent='✅ Playlist geladen';
-      document.getElementById('msg').className='ok';
 
-      // Live
+      buildTicker(d.ticker);
+
+      const msgEl = document.getElementById('msg');
+      msgEl.textContent='✅ Playlist geladen'; msgEl.className='ok';
+
+      const liveEl=document.getElementById('live');
       if(d.live && d.live.url){
-        document.getElementById('live').innerHTML=
+        liveEl.innerHTML =
           "<div class=item><b>"+esc(d.live.title||'Live-Stream')+"</b><br>"+
           "<iframe src='"+esc(d.live.url)+"' allowfullscreen></iframe></div>";
       }else{
-        document.getElementById('live').innerHTML='<em>Kein Live-Event</em>';
+        liveEl.innerHTML='<em>Kein Live-Event</em>';
       }
 
-      // Videos
       document.getElementById('v').innerHTML=(d.videos||[])
         .map(v=>"<div class=item><b>"+esc(v.title)+"</b><br>"+
           "<iframe src='"+esc(v.url)+"' allowfullscreen></iframe></div>")
         .join('')||'<em>Keine Videos</em>';
 
-      // Musik
       document.getElementById('m').innerHTML=(d.music||[])
-        .map(m=>"<div class=item>"+esc(m.title)+
-          " <button onclick=\"aud.src='"+esc(m.url)+"';aud.play()\">▶️</button></div>")
+        .map((m,i)=>"<div class=item>"+esc(m.title)+
+          " <button onclick=\"aud.src='"+esc(m.url)+"';aud.play()\">▶️</button>"+
+          " <button onclick=\"this.parentNode.remove();\">🗑️</button></div>")
         .join('')||'<em>Keine Musik</em>';
 
     }catch(e){
-      document.getElementById('msg').textContent='❌ Fehler: '+e.message;
-      document.getElementById('msg').className='err';
+      const msgEl = document.getElementById('msg');
+      msgEl.textContent='❌ Fehler: '+e.message; msgEl.className='err';
     }
   })();
   </script>
