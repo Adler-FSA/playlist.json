@@ -1,3 +1,14 @@
 {
-  "email": "platzhalter@email.de"
+  "pages": {
+    "FSA-2025-09-29-ABCD": { "email": "platzhalter@email.de", "status": "frei" },
+    "FSA-2025-09-29-EFGH": { "email": "platzhalter@email.de", "status": "frei" },
+    "FSA-2025-09-29-IJKL": { "email": "platzhalter@email.de", "status": "frei" },
+    "FSA-2025-09-29-MNOP": { "email": "platzhalter@email.de", "status": "frei" },
+    "FSA-2025-09-29-QRST": { "email": "platzhalter@email.de", "status": "frei" },
+    "FSA-2025-09-29-UVWX": { "email": "platzhalter@email.de", "status": "frei" },
+    "FSA-2025-09-29-YZ12": { "email": "platzhalter@email.de", "status": "frei" },
+    "FSA-2025-09-29-3456": { "email": "platzhalter@email.de", "status": "frei" },
+    "FSA-2025-09-29-789A": { "email": "platzhalter@email.de", "status": "frei" },
+    "FSA-2025-09-29-BCDE": { "email": "platzhalter@email.de", "status": "frei" }
+  }
 }
