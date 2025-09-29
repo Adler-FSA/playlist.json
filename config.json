@@ -1,14 +1,15 @@
 {
+  "defaultEmail": "kontakt@deine-domain.de",
   "pages": {
-    "FSA-2025-09-29-ABCD": { "email": "platzhalter@email.de", "status": "frei" },
-    "FSA-2025-09-29-EFGH": { "email": "platzhalter@email.de", "status": "frei" },
-    "FSA-2025-09-29-IJKL": { "email": "platzhalter@email.de", "status": "frei" },
-    "FSA-2025-09-29-MNOP": { "email": "platzhalter@email.de", "status": "frei" },
-    "FSA-2025-09-29-QRST": { "email": "platzhalter@email.de", "status": "frei" },
-    "FSA-2025-09-29-UVWX": { "email": "platzhalter@email.de", "status": "frei" },
-    "FSA-2025-09-29-YZ12": { "email": "platzhalter@email.de", "status": "frei" },
-    "FSA-2025-09-29-3456": { "email": "platzhalter@email.de", "status": "frei" },
-    "FSA-2025-09-29-789A": { "email": "platzhalter@email.de", "status": "frei" },
-    "FSA-2025-09-29-BCDE": { "email": "platzhalter@email.de", "status": "frei" }
+    "FSA-2025-09-29-ABCD": { "email": "partner-abcd@mail.de", "status": "aktiv" },
+    "FSA-2025-09-29-EFGH": { "email": "partner-efgh@mail.de", "status": "aktiv" },
+    "FSA-2025-09-29-IJKL": { "email": "partner-ijkl@mail.de", "status": "frei" },
+    "FSA-2025-09-29-MNOP": { "email": "partner-mnop@mail.de", "status": "frei" },
+    "FSA-2025-09-29-QRST": { "email": "partner-qrst@mail.de", "status": "aktiv" },
+    "FSA-2025-09-29-UVWX": { "email": "partner-uvwx@mail.de", "status": "frei" },
+    "FSA-2025-09-29-YZ12": { "email": "partner-yz12@mail.de", "status": "frei" },
+    "FSA-2025-09-29-3456": { "email": "partner-3456@mail.de", "status": "frei" },
+    "FSA-2025-09-29-789A": { "email": "partner-789a@mail.de", "status": "aktiv" },
+    "FSA-2025-09-29-BCDE": { "email": "partner-bcde@mail.de", "status": "frei" }
   }
 }
