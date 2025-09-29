@@ -72,6 +72,9 @@
 
   /* Footer */
   .footer{padding:60px 0;color:#ccd;font-size:1rem;border-top:1px solid rgba(255,255,255,.2)}
+
+  /* Admin-Box */
+  #adminBox{display:none;max-width:600px;margin:40px auto;padding:20px;border:2px dashed #aaa;background:#fff;color:#000;border-radius:10px}
 </style>
 </head>
 <body>
@@ -148,6 +151,16 @@
   <footer class="footer"><div class="wrap" style="text-align:center">© <span id="year"></span> FSA</div></footer>
 </main>
 
+<!-- Admin-Box (nur sichtbar mit ?admin=1) -->
+<div id="adminBox">
+  <h3>🛠️ Admin Override</h3>
+  <p>Page-ID: <span id="adminPageId"></span></p>
+  <input id="adminMail" type="email" placeholder="Neue Override-Mail" style="width:100%;padding:8px;margin:6px 0">
+  <button onclick="setOverride()" style="padding:8px 14px;background:#1cc2a0;color:#fff;border:none;border-radius:6px;cursor:pointer">✅ Setzen</button>
+  <button onclick="resetOverride()" style="padding:8px 14px;background:#e11d48;color:#fff;border:none;border-radius:6px;cursor:pointer">♻️ Löschen</button>
+  <div id="adminMsg" style="margin-top:8px;font-weight:700"></div>
+</div>
+
 <script>
 document.getElementById('year').textContent=new Date().getFullYear();
 
@@ -158,31 +171,80 @@ document.querySelectorAll(".accordion-btn").forEach(btn=>btn.addEventListener("c
 const musikBtn=document.getElementById("musikBtn");const bgMusik=document.getElementById("bgMusic");let musicPlaying=false;
 musikBtn.addEventListener("click",()=>{if(!musicPlaying){bgMusik.play();musikBtn.textContent="⏸ Musik stoppen";musicPlaying=true}else{bgMusik.pause();musikBtn.textContent="🎵 Musik starten";musicPlaying=false}});
 
+/* Page-ID aus URL */
+function extractPageIdFromUrl(url){
+  try{
+    const u=new URL(url, window.location.origin);
+    const pid=u.searchParams.get("pid");
+    if(pid) return pid;
+    const hay=u.href;
+    let m=hay.match(/FSA-\d{4}-\d{2}-\d{2}-[A-Z0-9]{4}/i);
+    if(m) return m[0];
+    m=hay.match(/FSA-[A-Z0-9\-]+/i);
+    if(m) return m[0];
+    return "DEFAULT";
+  }catch(e){return "DEFAULT";}
+}
+
 /* Inhalte laden */
 (async function(){
-  // Playlist (Video/Musik)
-  try{const res=await fetch("playlist.json");const data=await res.json();
-    if(data.videos&&data.videos.length)document.getElementById("bgVideo").src=data.videos[0].url;
-    if(data.music&&data.music.length){document.getElementById("bgMusicSrc").src=data.music[0].url;bgMusik.load();}
-  }catch(e){console.warn("Keine playlist.json")}
+  const PAGE_ID=extractPageIdFromUrl(location.href);
+  const OVERRIDE_KEY="FSA_EMAIL_OVERRIDE_"+PAGE_ID;
+  let effective="EMAIL_PLACEHOLDER";
+  let defaultEmail="EMAIL_PLACEHOLDER";
+  let pageEmail="";
+
+  // Playlist
+  try{const res=await fetch("playlist.json");const d=await res.json();
+    if(d.videos&&d.videos.length)document.getElementById("bgVideo").src=d.videos[0].url;
+    if(d.music&&d.music.length){document.getElementById("bgMusicSrc").src=d.music[0].url;bgMusik.load();}
+  }catch(e){}
 
   // Laufband
-  try{const res=await fetch("laufband.json");const data=await res.json();
-    if(data.texts&&data.texts.length)document.getElementById("tickerText").textContent=data.texts.join(" • ");
-  }catch(e){console.warn("Keine laufband.json")}
+  try{const res=await fetch("laufband.json");const d=await res.json();
+    if(d.texts&&d.texts.length)document.getElementById("tickerText").textContent=d.texts.join(" • ");
+  }catch(e){}
 
   // Kino
-  try{const res=await fetch("kino.json");const data=await res.json();
-    if(data.kino&&data.kino.url)document.getElementById("kinoIframe").src=data.kino.url;
-  }catch(e){console.warn("Keine kino.json")}
+  try{const res=await fetch("kino.json");const d=await res.json();
+    if(d.kino&&d.kino.url)document.getElementById("kinoIframe").src=d.kino.url;
+  }catch(e){}
 
   // Config (Email)
-  try{const res=await fetch("config.json");const data=await res.json();
-    const mail=data.defaultEmail||"EMAIL_PLACEHOLDER";
-    document.getElementById("ctaCopyText").textContent=mail;
-    document.getElementById("ctaMailto").href="mailto:"+mail;
-  }catch(e){console.warn("Keine config.json")}
+  try{const res=await fetch("config.json?nocache="+Date.now(),{cache:"no-store"});const cfg=await res.json();
+    defaultEmail=cfg.defaultEmail||defaultEmail;
+    if(cfg.pages&&cfg.pages[PAGE_ID]&&cfg.pages[PAGE_ID].email){pageEmail=cfg.pages[PAGE_ID].email;}
+  }catch(e){}
+
+  const overrideMail=localStorage.getItem(OVERRIDE_KEY)||"";
+  effective=overrideMail||pageEmail||defaultEmail;
+
+  document.getElementById("ctaCopyText").textContent=effective;
+  document.getElementById("ctaMailto").href="mailto:"+effective;
+
+  // Admin sichtbar machen
+  if(/(\?|&)admin=1(\b|$)/.test(location.search)){
+    document.getElementById("adminBox").style.display="block";
+    document.getElementById("adminPageId").textContent=PAGE_ID;
+    document.getElementById("adminMail").value=overrideMail||"";
+  }
 })();
+
+/* Admin Override */
+function setOverride(){
+  const pid=document.getElementById("adminPageId").textContent;
+  const mail=document.getElementById("adminMail").value.trim();
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail)){document.getElementById("adminMsg").textContent="⚠️ Ungültige E-Mail";document.getElementById("adminMsg").style.color="#c62828";return;}
+  localStorage.setItem("FSA_EMAIL_OVERRIDE_"+pid,mail);
+  document.getElementById("adminMsg").textContent="✅ Override gesetzt: "+mail;
+  document.getElementById("adminMsg").style.color="#2e7d32";
+}
+function resetOverride(){
+  const pid=document.getElementById("adminPageId").textContent;
+  localStorage.removeItem("FSA_EMAIL_OVERRIDE_"+pid);
+  document.getElementById("adminMsg").textContent="♻️ Override gelöscht";
+  document.getElementById("adminMsg").style.color="#f59e0b";
+}
 </script>
 </body>
 </html>
