@@ -1,15 +1,15 @@
 {
-  "defaultEmail": "kontakt@deine-domain.de",
+  "defaultEmail": "platzhalter@email.de",
   "pages": {
-    "FSA-2025-09-29-ABCD": { "email": "partner-abcd@mail.de", "status": "aktiv" },
-    "FSA-2025-09-29-EFGH": { "email": "partner-efgh@mail.de", "status": "aktiv" },
-    "FSA-2025-09-29-IJKL": { "email": "partner-ijkl@mail.de", "status": "frei" },
-    "FSA-2025-09-29-MNOP": { "email": "partner-mnop@mail.de", "status": "frei" },
-    "FSA-2025-09-29-QRST": { "email": "partner-qrst@mail.de", "status": "aktiv" },
-    "FSA-2025-09-29-UVWX": { "email": "partner-uvwx@mail.de", "status": "frei" },
-    "FSA-2025-09-29-YZ12": { "email": "partner-yz12@mail.de", "status": "frei" },
-    "FSA-2025-09-29-3456": { "email": "partner-3456@mail.de", "status": "frei" },
-    "FSA-2025-09-29-789A": { "email": "partner-789a@mail.de", "status": "aktiv" },
-    "FSA-2025-09-29-BCDE": { "email": "partner-bcde@mail.de", "status": "frei" }
+    "FSA-2025-09-29-0001": { "email": "mentor1@mail.de", "status": "aktiv" },
+    "FSA-2025-09-29-0002": { "email": "mentor2@mail.de", "status": "aktiv" },
+    "FSA-2025-09-29-0003": { "email": "mentor3@mail.de", "status": "frei" },
+    "FSA-2025-09-29-0004": { "email": "mentor4@mail.de", "status": "frei" },
+    "FSA-2025-09-29-0005": { "email": "mentor5@mail.de", "status": "aktiv" },
+    "FSA-2025-09-29-0006": { "email": "mentor6@mail.de", "status": "frei" },
+    "FSA-2025-09-29-0007": { "email": "mentor7@mail.de", "status": "frei" },
+    "FSA-2025-09-29-0008": { "email": "mentor8@mail.de", "status": "aktiv" },
+    "FSA-2025-09-29-0009": { "email": "mentor9@mail.de", "status": "frei" },
+    "FSA-2025-09-29-0010": { "email": "mentor10@mail.de", "status": "frei" }
   }
 }
