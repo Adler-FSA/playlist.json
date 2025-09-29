@@ -2,11 +2,12 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>🌐 FSA Playlist Viewer</title>
+  <title>🌐 FSA Global Viewer</title>
   <style>
     body{font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;
          margin:0;background:#fff;color:#111;padding:16px}
     h2{margin-top:0}
+    h3{margin-top:24px;margin-bottom:8px}
     .item{margin:12px 0;padding:8px;border:1px solid #ddd;
           border-radius:6px;background:#fafafa}
     iframe{width:100%;height:280px;border:none;border-radius:6px}
@@ -18,6 +19,9 @@
 <body>
   <h2>🌐 Globale Playlist</h2>
   <div id="msg">Lade…</div>
+
+  <h3>🔴 Live-Event</h3>
+  <div id="live"></div>
 
   <h3>📺 Videos</h3>
   <div id="v"></div>
@@ -36,12 +40,28 @@
       const d=await r.json();
       document.getElementById('msg').textContent='✅ Playlist geladen';
       document.getElementById('msg').className='ok';
+
+      // Live
+      if(d.live && d.live.url){
+        document.getElementById('live').innerHTML=
+          "<div class=item><b>"+esc(d.live.title||'Live-Stream')+"</b><br>"+
+          "<iframe src='"+esc(d.live.url)+"' allowfullscreen></iframe></div>";
+      }else{
+        document.getElementById('live').innerHTML='<em>Kein Live-Event</em>';
+      }
+
+      // Videos
       document.getElementById('v').innerHTML=(d.videos||[])
-        .map(v=>"<div class=item><b>"+esc(v.title)+"</b><br><iframe src='"+esc(v.url)+"' allowfullscreen></iframe></div>")
+        .map(v=>"<div class=item><b>"+esc(v.title)+"</b><br>"+
+          "<iframe src='"+esc(v.url)+"' allowfullscreen></iframe></div>")
         .join('')||'<em>Keine Videos</em>';
+
+      // Musik
       document.getElementById('m').innerHTML=(d.music||[])
-        .map(m=>"<div class=item>"+esc(m.title)+" <button onclick=\"aud.src='"+esc(m.url)+"';aud.play()\">▶️</button></div>")
+        .map(m=>"<div class=item>"+esc(m.title)+
+          " <button onclick=\"aud.src='"+esc(m.url)+"';aud.play()\">▶️</button></div>")
         .join('')||'<em>Keine Musik</em>';
+
     }catch(e){
       document.getElementById('msg').textContent='❌ Fehler: '+e.message;
       document.getElementById('msg').className='err';
