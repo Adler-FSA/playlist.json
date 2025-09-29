@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2025-09-30T12:00:00Z",
+  "updated": "2025-09-30T20:00:00Z",
   "rotation": "weekly",
   "videos": [
     { "title": "Adlerflug 1", "url": "https://www.youtube.com/embed/CqesPVWSzao" },
@@ -13,5 +13,9 @@
     { "title": "Soaring – Kevin MacLeod", "url": "https://archive.org/download/KevinMacLeod_Ambient/Soaring.mp3" },
     { "title": "The Temperature of the Air – Chris Zabriskie", "url": "https://archive.org/download/ChrisZabriskieAmbient/TemperatureOfAir.mp3" },
     { "title": "At Rest – Kevin MacLeod", "url": "https://archive.org/download/AtRest_48/AtRest.mp3" }
-  ]
+  ],
+  "live": {
+    "title": "FSA Global Zoom Call",
+    "url": "https://zoom.us/j/1234567890"
+  }
 }
