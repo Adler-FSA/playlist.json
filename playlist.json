@@ -35,8 +35,44 @@
 
   "music": [
     {
-      "title": "Greensleeves (Wikimedia, Testmusik)",
-      "url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/4/45/Greensleeves.ogg/Greensleeves.ogg.mp3"
+      "title": "Track 1 – Terra Mater",
+      "url": "https://adler-fsa.github.io/playlist.json/terra-mater-inspiring-cinematic-epic-272565.mp3"
+    },
+    {
+      "title": "Track 2 – Platzhalter",
+      "url": "https://adler-fsa.github.io/playlist.json/musik2.mp3"
+    },
+    {
+      "title": "Track 3 – Platzhalter",
+      "url": "https://adler-fsa.github.io/playlist.json/musik3.mp3"
+    },
+    {
+      "title": "Track 4 – Platzhalter",
+      "url": "https://adler-fsa.github.io/playlist.json/musik4.mp3"
+    },
+    {
+      "title": "Track 5 – Platzhalter",
+      "url": "https://adler-fsa.github.io/playlist.json/musik5.mp3"
+    },
+    {
+      "title": "Track 6 – Platzhalter",
+      "url": "https://adler-fsa.github.io/playlist.json/musik6.mp3"
+    },
+    {
+      "title": "Track 7 – Platzhalter",
+      "url": "https://adler-fsa.github.io/playlist.json/musik7.mp3"
+    },
+    {
+      "title": "Track 8 – Platzhalter",
+      "url": "https://adler-fsa.github.io/playlist.json/musik8.mp3"
+    },
+    {
+      "title": "Track 9 – Platzhalter",
+      "url": "https://adler-fsa.github.io/playlist.json/musik9.mp3"
+    },
+    {
+      "title": "Track 10 – Platzhalter",
+      "url": "https://adler-fsa.github.io/playlist.json/musik10.mp3"
     }
   ]
 }
