@@ -1,0 +1,173 @@
+<!-- ⚙️ Admin Panel – Übersicht & Steuerung -->
+<div id="fsa-admin" style="font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif; max-width:960px; margin:20px auto; padding:20px; background:#fff; border:1px solid #ddd; border-radius:10px; box-shadow:0 4px 12px rgba(0,0,0,.1);">
+  <h2 style="margin:0 0 12px; font-size:1.4rem; color:#111827;">⚙️ FSA Admin – Übersicht aller Landingpages</h2>
+
+  <!-- Zähler -->
+  <div style="padding:12px; background:#f9fafb; border:1px solid #ccc; border-radius:8px; margin-bottom:14px;">
+    Gesamt: <strong id="count-total">0</strong> |
+    Frei: <strong id="count-free">0</strong> |
+    Aktiv: <strong id="count-active">0</strong>
+  </div>
+
+  <!-- Export Button -->
+  <button onclick="exportCSV()" style="margin-bottom:14px; padding:10px 16px; background:#2563eb; color:#fff; border:none; border-radius:6px; cursor:pointer;">
+    📤 Exportieren (CSV)
+  </button>
+
+  <!-- Tabelle -->
+  <table style="width:100%; border-collapse:collapse; font-size:.95rem;">
+    <thead>
+      <tr style="background:#f3f4f6; text-align:left;">
+        <th style="padding:8px; border:1px solid #ddd;">ID</th>
+        <th style="padding:8px; border:1px solid #ddd;">Status</th>
+        <th style="padding:8px; border:1px solid #ddd;">E-Mail</th>
+        <th style="padding:8px; border:1px solid #ddd;">Aktionen</th>
+      </tr>
+    </thead>
+    <tbody id="page-list"></tbody>
+  </table>
+</div>
+
+<!-- 🎬 Admin-Kontrolle für Kino-Fenster -->
+<div style="margin-top:40px; max-width:960px; margin-left:auto; margin-right:auto; padding:20px; background:#fff; border:1px solid #ddd; border-radius:10px; box-shadow:0 4px 12px rgba(0,0,0,.1);">
+  <h3 style="margin-top:0">🎬 Kino-Fenster einstellen</h3>
+  <p style="color:#333;">Wähle, was im Highlight-Kino sichtbar sein soll.</p>
+
+  <label style="font-weight:700; display:block; margin:10px 0 4px;">YouTube/Zoom/Highlight URL</label>
+  <input id="kinoUrl" type="text" placeholder="https://..."
+         style="width:100%; padding:8px; border:1px solid #bbb; border-radius:6px;">
+
+  <div style="margin-top:12px;">
+    <button id="saveKinoBtn" style="padding:10px 16px; background:#2563eb; color:#fff; border:none; border-radius:6px; cursor:pointer;">
+      ✅ Speichern
+    </button>
+    <button id="resetKinoBtn" style="padding:10px 16px; background:#e11d48; color:#fff; border:none; border-radius:6px; cursor:pointer;">
+      ♻️ Auf Standard (Adlerflug)
+    </button>
+  </div>
+
+  <div id="kinoMsg" style="margin-top:12px; font-weight:700; color:#2e7d32;"></div>
+</div>
+
+<script>
+(async function(){
+  let config = { pages: {} };
+  try {
+    const res = await fetch("config.json");
+    config = await res.json();
+  } catch(e){
+    console.warn("⚠️ config.json nicht geladen.");
+  }
+
+  const listEl = document.getElementById("page-list");
+  const totalEl = document.getElementById("count-total");
+  const freeEl = document.getElementById("count-free");
+  const activeEl = document.getElementById("count-active");
+
+  function render(){
+    let total=0, free=0, active=0;
+    const rows = Object.entries(config.pages).map(([id,data])=>{
+      total++;
+      if(data.status==="frei") free++; else active++;
+
+      return `
+        <tr>
+          <td style="padding:6px; border:1px solid #ddd;">${id}</td>
+          <td style="padding:6px; border:1px solid #ddd; color:${data.status==="frei"?"green":"#2563eb"}; font-weight:bold;">${data.status}</td>
+          <td style="padding:6px; border:1px solid #ddd;">
+            <input id="mail-${id}" type="email" value="${data.email}" style="width:95%; padding:4px; border:1px solid #bbb; border-radius:4px;">
+          </td>
+          <td style="padding:6px; border:1px solid #ddd;">
+            <button onclick="setEmail('${id}')" style="padding:4px 8px; background:#16a34a; color:#fff; border:none; border-radius:4px; cursor:pointer;">✅ Speichern</button>
+            <button onclick="resetPage('${id}')" style="padding:4px 8px; background:#e11d48; color:#fff; border:none; border-radius:4px; cursor:pointer;">🏭 Reset</button>
+          </td>
+        </tr>
+      `;
+    });
+
+    listEl.innerHTML = rows.join("");
+    totalEl.textContent = total;
+    freeEl.textContent = free;
+    activeEl.textContent = active;
+  }
+
+  // Aktionen
+  window.setEmail = function(id){
+    const mail = document.getElementById("mail-"+id).value.trim();
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail)){
+      alert("⚠️ Ungültige E-Mail.");
+      return;
+    }
+    config.pages[id].email = mail;
+    config.pages[id].status = "aktiv";
+    render();
+    alert("✅ E-Mail aktualisiert für " + id);
+  };
+
+  window.resetPage = function(id){
+    config.pages[id].email = "platzhalter@email.de";
+    config.pages[id].status = "frei";
+    render();
+    alert("♻️ Seite zurückgesetzt auf Werkseinstellung: " + id);
+  };
+
+  // 📤 Export als CSV
+  window.exportCSV = function(){
+    let csv = "ID,Status,E-Mail\n";
+    Object.entries(config.pages).forEach(([id,data])=>{
+      csv += `${id},${data.status},${data.email}\n`;
+    });
+
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "landingpages.csv";
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  render();
+})();
+
+/* ========= Kino-Admin: schreibt in kino.json (oder simuliert) ========= */
+async function updateKinoJson(newUrl){
+  const data = {
+    kino: {
+      type: "custom",
+      url: newUrl
+    }
+  };
+
+  try {
+    // Versuch, kino.json zu überschreiben
+    await fetch("kino.json", {
+      method: "PUT",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify(data, null, 2)
+    });
+    document.getElementById("kinoMsg").textContent = "✅ Kino-Fenster aktualisiert!";
+    document.getElementById("kinoMsg").style.color = "#2e7d32";
+  } catch(e){
+    console.warn("⚠️ Direktes Schreiben nicht möglich – lokale Simulation.");
+    localStorage.setItem("kinoOverride", JSON.stringify(data));
+    document.getElementById("kinoMsg").textContent = "💾 Lokal gespeichert (nur Testlauf).";
+    document.getElementById("kinoMsg").style.color = "#f59e0b";
+  }
+}
+
+document.getElementById("saveKinoBtn").addEventListener("click", ()=>{
+  const url = document.getElementById("kinoUrl").value.trim();
+  if(!url){
+    document.getElementById("kinoMsg").textContent = "⚠️ Bitte gültige URL eingeben.";
+    document.getElementById("kinoMsg").style.color = "#c62828";
+    return;
+  }
+  updateKinoJson(url);
+});
+
+document.getElementById("resetKinoBtn").addEventListener("click", ()=>{
+  const defaultUrl = "https://www.youtube.com/embed/miWBKSszEIw?autoplay=1&mute=1&loop=1&playlist=miWBKSszEIw&controls=0&modestbranding=1&playsinline=1";
+  updateKinoJson(defaultUrl);
+});
+</script>
