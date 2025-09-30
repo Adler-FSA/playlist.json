@@ -1,28 +1,4 @@
 {
-  "version": 1,
-  "rotation": "weekly",
-  "videos": [
-    {
-      "title": "Adlerflug",
-      "url": "https://www.youtube.com/embed/miWBKSszEIw"
-    },
-    {
-      "title": "Motivation 1",
-      "url": "https://www.youtube.com/embed/CqesPVWSzao"
-    },
-    {
-      "title": "Motivation 2",
-      "url": "https://www.youtube.com/embed/qPlWNJ__Z1Q"
-    },
-    {
-      "title": "Motivation 3",
-      "url": "https://www.youtube.com/embed/WcuSPqefQBY"
-    }
-  ],
-  "music": [
-    {
-      "title": "Epic Track",
-      "url": "terra-mater-inspiring-cinematic-epic-272565.mp3"
-    }
-  ]
+  "video": "adler-hero.mp4",
+  "music": "track1.mp3"
 }
