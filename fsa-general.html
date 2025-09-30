@@ -1,86 +1,14 @@
-<!doctype html>
-<html lang="de">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>FSA Laufband Admin</title>
-  <style>
-    body{font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;margin:0;padding:20px;background:#f9fafb;color:#111}
-    h1{margin-top:0;color:#1f2937}
-    .wrap{max-width:800px;margin:0 auto}
-    .card{background:#fff;border:1px solid #ddd;border-radius:10px;padding:16px;margin-bottom:20px;box-shadow:0 4px 8px rgba(0,0,0,0.05)}
-    .row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
-    input{flex:1;padding:10px;border:1px solid #bbb;border-radius:8px}
-    button{padding:10px 14px;border:none;border-radius:8px;font-weight:600;cursor:pointer}
-    .btn{background:#2563eb;color:#fff}
-    .btn-red{background:#dc2626;color:#fff}
-    .item{padding:10px;border:1px solid #ddd;border-radius:6px;margin:6px 0;display:flex;justify-content:space-between;align-items:center}
-    .muted{color:#64748b;font-size:.9rem}
-  </style>
-</head>
-<body>
-<div class="wrap">
-  <h1>🛠️ Laufband Admin</h1>
-
-  <div class="card">
-    <h3>➕ Nachricht hinzufügen</h3>
-    <div class="row">
-      <input id="msgInput" type="text" placeholder="Neue Nachricht eingeben...">
-      <button class="btn" onclick="addMsg()">Hinzufügen</button>
-    </div>
-  </div>
-
-  <div class="card">
-    <h3>📜 Nachrichten</h3>
-    <div id="msgList" class="muted">Noch keine geladen…</div>
-  </div>
-
-  <div class="card">
-    <h3>💾 Export</h3>
-    <button class="btn" onclick="exportJSON()">Export JSON (laufband.json)</button>
-    <p class="muted">👉 Lade die Datei danach ins Repo hoch, damit sie global wirkt.</p>
-  </div>
-</div>
-
 <script>
-let messages=[];
-
-/* Render */
-function render(){
-  const box=document.getElementById("msgList");
-  if(messages.length===0){ box.innerHTML="<div class='muted'>Keine Nachrichten</div>"; return; }
-  box.innerHTML=messages.map((m,i)=>`
-    <div class="item">
-      <span>${m}</span>
-      <button class="btn-red" onclick="delMsg(${i})">🗑️ Löschen</button>
-    </div>
-  `).join("");
+// Liest die ID aus der URL, z.B. ?id=FSA-2025-09-30-4718
+function getLPId(){
+  const params = new URLSearchParams(window.location.search);
+  return params.get("id") || "Keine ID gefunden";
 }
 
-/* Add */
-function addMsg(){
-  const v=document.getElementById("msgInput").value.trim();
-  if(!v) return;
-  messages.push(v);
-  document.getElementById("msgInput").value="";
-  render();
-}
-
-/* Delete */
-function delMsg(i){
-  messages.splice(i,1);
-  render();
-}
-
-/* Export */
-function exportJSON(){
-  const out={messages};
-  const blob=new Blob([JSON.stringify(out,null,2)],{type:"application/json"});
-  const a=document.createElement("a");
-  a.href=URL.createObjectURL(blob);
-  a.download="laufband.json";
-  a.click();
-}
+// Schreibe die ID in ein Element mit id="lp-id"
+document.addEventListener("DOMContentLoaded", ()=>{
+  const id = getLPId();
+  const el = document.getElementById("lp-id");
+  if(el) el.textContent = id;
+});
 </script>
-</body>
-</html>
