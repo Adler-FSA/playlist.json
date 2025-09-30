@@ -1,0 +1,125 @@
+<!-- =======================
+ 📂 Media Admin (FSA)
+======================= -->
+<div id="media-admin" style="font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif; max-width:880px; margin:30px auto; padding:20px; background:#fff; border:1px solid #ddd; border-radius:10px; box-shadow:0 4px 12px rgba(0,0,0,.1);">
+  <h2 style="margin-top:0; font-size:1.4rem; color:#111827;">🎬 Media Admin – GitHub Steuerung</h2>
+
+  <!-- Token Eingabe -->
+  <div style="margin-bottom:18px; padding:12px; border:1px solid #eee; border-radius:8px; background:#f9fafb;">
+    <label style="font-weight:600;">🔑 GitHub Token (wird nur lokal gespeichert)</label><br>
+    <input id="ghToken" type="password" placeholder="Token hier eingeben"
+           style="width:100%; padding:8px; margin-top:6px; border:1px solid #bbb; border-radius:6px;">
+    <button onclick="saveToken()" style="margin-top:8px; padding:8px 14px; background:#2563eb; color:#fff; border:none; border-radius:6px; cursor:pointer;">
+      💾 Token speichern
+    </button>
+    <p id="tokenStatus" style="margin:8px 0 0; font-size:.9rem; color:#444;"></p>
+  </div>
+
+  <!-- Aktionen -->
+  <div style="margin-bottom:20px;">
+    <button onclick="loadPlaylist()" style="padding:10px 16px; background:#16a34a; color:#fff; border:none; border-radius:6px; cursor:pointer;">
+      📥 Playlist laden
+    </button>
+    <button onclick="updateRotation()" style="padding:10px 16px; background:#d97706; color:#fff; border:none; border-radius:6px; cursor:pointer;">
+      🔄 Rotation speichern
+    </button>
+  </div>
+
+  <!-- Info-Ausgabe -->
+  <pre id="infoBox" style="padding:12px; background:#f3f4f6; border:1px solid #ddd; border-radius:6px; white-space:pre-wrap; font-size:.9rem; color:#111;"></pre>
+</div>
+
+<script>
+// ====================
+// Token Verwaltung
+// ====================
+function saveToken(){
+  const token = document.getElementById("ghToken").value.trim();
+  if(!token){
+    document.getElementById("tokenStatus").textContent = "⚠️ Kein Token eingegeben.";
+    document.getElementById("tokenStatus").style.color = "#b91c1c";
+    return;
+  }
+  localStorage.setItem("ghToken", token);
+  document.getElementById("tokenStatus").textContent = "✅ Token gespeichert (nur lokal auf diesem Gerät).";
+  document.getElementById("tokenStatus").style.color = "#15803d";
+}
+function getToken(){
+  return localStorage.getItem("ghToken") || "";
+}
+
+// ====================
+// Playlist laden
+// ====================
+async function loadPlaylist(){
+  const token = getToken();
+  const info = document.getElementById("infoBox");
+  if(!token){
+    info.textContent = "❌ Kein Token gespeichert!";
+    return;
+  }
+  try {
+    const res = await fetch("https://api.github.com/repos/Adler-FSA/Adler-FSA/contents/playlist.json", {
+      headers: { "Authorization": "token " + token }
+    });
+    const data = await res.json();
+    if(res.ok){
+      info.textContent = "📂 Playlist geladen:\n" + atob(data.content);
+    } else {
+      info.textContent = "❌ Fehler: " + data.message;
+    }
+  } catch(e){
+    info.textContent = "⚠️ Netzwerkfehler: " + e.message;
+  }
+}
+
+// ====================
+// Rotation speichern
+// ====================
+async function updateRotation(){
+  const token = getToken();
+  const info = document.getElementById("infoBox");
+  if(!token){
+    info.textContent = "❌ Kein Token gespeichert!";
+    return;
+  }
+
+  const newRotation = {
+    rotation: {
+      active: Date.now(),
+      track: "motivational-track-01.mp3"
+    }
+  };
+
+  try {
+    // SHA für rotation.json holen
+    const getRes = await fetch("https://api.github.com/repos/Adler-FSA/Adler-FSA/contents/rotation.json", {
+      headers: { "Authorization": "token " + token }
+    });
+    const getData = await getRes.json();
+
+    // rotation.json überschreiben
+    const putRes = await fetch("https://api.github.com/repos/Adler-FSA/Adler-FSA/contents/rotation.json", {
+      method: "PUT",
+      headers: {
+        "Authorization": "token " + token,
+        "Accept": "application/vnd.github+json"
+      },
+      body: JSON.stringify({
+        message: "Update rotation.json via Admin Panel",
+        content: btoa(JSON.stringify(newRotation, null, 2)),
+        sha: getData.sha
+      })
+    });
+
+    const putData = await putRes.json();
+    if(putRes.ok){
+      info.textContent = "✅ Neue Rotation gespeichert!\nCommit: " + putData.commit.sha;
+    } else {
+      info.textContent = "❌ Fehler: " + putData.message;
+    }
+  } catch(e){
+    info.textContent = "⚠️ Netzwerkfehler: " + e.message;
+  }
+}
+</script>
