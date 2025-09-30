@@ -170,7 +170,7 @@
 <div class="bg-video" aria-hidden="true">
   <iframe id="bgVideo" src=""
           title="Adlerflug Video"
-          allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
+          allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
           allowfullscreen
           referrerpolicy="strict-origin-when-cross-origin"></iframe>
 </div>
@@ -527,40 +527,54 @@ document.getElementById('copyBtn').addEventListener('click',()=>{
 
 /* ========= Hintergrund-Video & Musik Defaults ========= */
 document.getElementById("bgVideo").src =
-  "https://www.youtube.com/embed/miWBKSszEIw?autoplay=1&mute=1&loop=1&playlist=miWBKSszEIw&controls=0&modestbranding=1&playsinline=1";
+  "https://www.youtube-nocookie.com/embed/miWBKSszEIw?autoplay=1&mute=1&loop=1&playlist=miWBKSszEIw&controls=0&modestbranding=1&playsinline=1";
 
 document.getElementById("bgMusicSrc").src =
   "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
 document.getElementById("bgMusic").load();
 </script>
-  <!-- ======================= PATCH: Adler Video Fallback ======================= -->
+
+<!-- ======================= PATCH: Adler Video Fallback ======================= -->
 <script>
 (function(){
   const frame = document.getElementById("bgVideo");
 
-  // Adler-Video Standard-URL
-  const url = "https://www.youtube.com/embed/miWBKSszEIw?autoplay=1&mute=1&loop=1&playlist=miWBKSszEIw&controls=0&modestbranding=1&playsinline=1&enablejsapi=1";
+  // Adler-Video Standard-URL (explizit nocookie + enablejsapi)
+  const url = "https://www.youtube-nocookie.com/embed/miWBKSszEIw?autoplay=1&mute=1&loop=1&playlist=miWBKSszEIw&controls=0&modestbranding=1&playsinline=1&enablejsapi=1";
 
-  // Dein eigenes Adler-Bild als Fallback
+  // Eigenes Adler-Bild als Fallback (Repo-Asset)
   const fallbackImage = "https://raw.githubusercontent.com/Adler-FSA/FSA-Admin/main/assets/adler-fallback.jpg";
 
+  function swapToImage(){
+    if (!frame) return;
+    frame.outerHTML = '<div style="position:fixed;inset:0;z-index:-2;background:url('+fallbackImage+') center/cover no-repeat;"></div>';
+  }
+
   if(frame){
+    // Primär setzen
     frame.src = url;
 
-    // 🦅 Wenn das Video nicht geladen wird → statisches Bild einsetzen
-    frame.addEventListener("error", ()=>{
-      frame.outerHTML = '<div style="position:fixed;inset:0;z-index:-2;background:url('+fallbackImage+') center/cover no-repeat;"></div>';
-    });
+    // Fehler-Event
+    frame.addEventListener("error", swapToImage);
 
-    // 🦅 Extra Safari/iOS-Check: Wenn Video nach 3s nicht läuft → Bild einsetzen
+    // iOS/Safari/Blocker-Heuristik
     setTimeout(()=>{
-      if(frame && frame.contentWindow === null){
-        frame.outerHTML = '<div style="position:fixed;inset:0;z-index:-2;background:url('+fallbackImage+') center/cover no-repeat;"></div>';
+      // Wenn keine contentWindow verfügbar ist oder leere Größe → Bild
+      try{
+        const noContext = !frame.contentWindow;
+        const rect = frame.getBoundingClientRect();
+        const tooSmall = (rect.width < 2 || rect.height < 2);
+        if(noContext || tooSmall){
+          swapToImage();
+        }
+      }catch(e){
+        swapToImage();
       }
-    }, 3000);
+    }, 2500);
   }
 })();
 </script>
 <!-- ======================= /PATCH ======================= -->
+
 </body>
 </html>
