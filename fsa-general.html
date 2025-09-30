@@ -533,5 +533,34 @@ document.getElementById("bgMusicSrc").src =
   "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
 document.getElementById("bgMusic").load();
 </script>
+  <!-- ======================= PATCH: Adler Video Fallback ======================= -->
+<script>
+(function(){
+  const frame = document.getElementById("bgVideo");
+
+  // Adler-Video Standard-URL
+  const url = "https://www.youtube.com/embed/miWBKSszEIw?autoplay=1&mute=1&loop=1&playlist=miWBKSszEIw&controls=0&modestbranding=1&playsinline=1&enablejsapi=1";
+
+  // Dein eigenes Adler-Bild als Fallback
+  const fallbackImage = "https://raw.githubusercontent.com/Adler-FSA/FSA-Admin/main/assets/adler-fallback.jpg";
+
+  if(frame){
+    frame.src = url;
+
+    // 🦅 Wenn das Video nicht geladen wird → statisches Bild einsetzen
+    frame.addEventListener("error", ()=>{
+      frame.outerHTML = '<div style="position:fixed;inset:0;z-index:-2;background:url('+fallbackImage+') center/cover no-repeat;"></div>';
+    });
+
+    // 🦅 Extra Safari/iOS-Check: Wenn Video nach 3s nicht läuft → Bild einsetzen
+    setTimeout(()=>{
+      if(frame && frame.contentWindow === null){
+        frame.outerHTML = '<div style="position:fixed;inset:0;z-index:-2;background:url('+fallbackImage+') center/cover no-repeat;"></div>';
+      }
+    }, 3000);
+  }
+})();
+</script>
+<!-- ======================= /PATCH ======================= -->
 </body>
 </html>
